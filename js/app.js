@@ -70,4 +70,10 @@ app.controller('AuthController', ['$scope', '$http', function($scope, $http) {
         $scope.isLoggedIn = true;
         $scope.loadBookmarks(userId);
     }
+    // 表单提交函数，用于防止默认跳转
+    $scope.submitForm = function(event) {
+        console.log('submitForm 函数被调用'); // 调试输出
+        event.preventDefault(); // 防止表单默认提交行为
+        $scope.login(); // 调用登录函数
+    };
 }]);
