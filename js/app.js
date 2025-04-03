@@ -4,7 +4,15 @@
 var app = angular.module('bookmarkApp', []);
 const SUPABASE_URL = 'https://vfwrwhoqkifxlogoavod.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZmd3J3aG9xa2lmeGxvZ29hdm9kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM2ODc1NTYsImV4cCI6MjA1OTI2MzU1Nn0.HX_WGCy93SwmrIZjFOxf5Ma86jE3pNITIhZu-r6mbDI';
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// 修改supabase初始化配置
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: false,  // 禁用URL中的session检测
+    flowType: 'pkce'           // 使用PKCE流程
+  }
+});
 
 // 然后控制器中可以直接使用supabase变量
 app.controller('AuthController', ['$scope', '$http', function($scope, $http) {
@@ -23,6 +31,9 @@ app.controller('AuthController', ['$scope', '$http', function($scope, $http) {
             return;
         }
         
+        // 阻止表单默认提交行为
+        event.preventDefault();
+        
         supabase.auth.signInWithPassword({
             email: $scope.username,
             password: $scope.password
@@ -32,11 +43,16 @@ app.controller('AuthController', ['$scope', '$http', function($scope, $http) {
                 $scope.$apply();
                 return;
             }
+            
+            // 手动处理登录成功逻辑
             localStorage.setItem('userId', data.user.id);
             $scope.isLoggedIn = true;
             $scope.message = '';
             $scope.loadBookmarks(data.user.id);
             $scope.$apply();
+            
+            // 可选：手动导航到主页
+            // window.location.hash = '/home';
         });
     };
     
