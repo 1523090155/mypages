@@ -2,7 +2,7 @@
 var app = angular.module('bookmarkApp', []);
 
 // 定义新的服务端地址
-const SERVER_URL = 'http://140.82.5.217:3000';
+const SERVER_URL = 'https://marks.111600.xyz';
 
 // 创建认证控制器
 app.controller('AuthController', ['$scope', '$http', function($scope, $http) {
