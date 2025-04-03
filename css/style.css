@@ -1,0 +1,132 @@
+/* 全局样式 */
+body {
+    font-family: 'Noto Sans SC', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #E5F6E8, #F0F9F1);
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* 新增背景渐变动画，减慢速度 */
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    /* 应用背景渐变动画，减慢速度到 30s */
+    animation: gradientAnimation 30s ease infinite;
+    background-size: 400% 400%;
+}
+
+h1 {
+    text-align: center;
+    color: #558B6E;
+    /* 移除滚动动画，添加上下浮动动画 */
+    animation: float 5s ease-in-out infinite alternate;
+    margin-bottom: 50px;
+}
+
+/* 新增标题浮动动画 */
+@keyframes float {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-10px);
+    }
+}
+
+h2 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: #558B6E;
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* 书签列表样式 */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-gap: 20px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.card {
+    background-color: #F5FAF6;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.2s ease;
+    animation: fadeIn 1s ease-in-out;
+    border: 1px solid #e0e0e0;
+    /* 新增卡片加载时的缩放动画 */
+    animation: cardScale 0.5s ease-out;
+}
+
+/* 卡片缩放动画 */
+@keyframes cardScale {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.card a {
+    display: block;
+    padding: 20px;
+    text-decoration: none;
+    color: #558B6E;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #558B6E;
+}
+
+.card-desc {
+    font-size: 14px;
+    color: rgba(85, 139, 110, 0.8);
+}
+
+.card:hover {
+    transform: scale(1.03);
+    background-color: #E5F6E8;
+    box-shadow: 0 0 15px rgba(0, 123, 255, 0.3);
+    border-color: #007BFF;
+    /* 移除卡片悬停时的旋转动画 */
+    /* animation: cardRotate 0.5s ease; */
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+}
