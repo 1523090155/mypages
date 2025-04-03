@@ -13,54 +13,70 @@ app.controller('AuthController', ['$scope', '$http', function($scope, $http) {
     $scope.isLoggedIn = false;
     $scope.bookmarks = [];
 
-    // 登录函数
+    // 替换原有的SERVER_URL配置
+    const SUPABASE_URL = 'https://vfwrwhoqkifxlogoavod.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZmd3J3aG9xa2lmeGxvZ29hdm9kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM2ODc1NTYsImV4cCI6MjA1OTI2MzU1Nn0.HX_WGCy93SwmrIZjFOxf5Ma86jE3pNITIhZu-r6mbDI';
+    // 问题：supabase变量未定义，需要先引入Supabase库
+    // 修改index.html，在AngularJS库之后添加：
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    
+    // 修改登录函数
+    // 当前错误处理可以更完善
     $scope.login = function() {
         if (!$scope.username || !$scope.password) {
-            $scope.message = '用户名和密码不能为空';
+            $scope.message = '邮箱和密码不能为空';
             return;
         }
-
-        $http.post(`${SERVER_URL}/login`, {
-            username: $scope.username,
+        
+        supabase.auth.signInWithPassword({
+            email: $scope.username,
             password: $scope.password
-        })
-        .then(function(response) {
-            if (response.data.userId) {
-                localStorage.setItem('userId', response.data.userId);
-                $scope.isLoggedIn = true;
-                $scope.message = '';
-                $scope.loadBookmarks(response.data.userId);
-            } else {
-                $scope.message = response.data.error || '登录失败，请重试';
+        }).then(({ data, error }) => {
+            if (error) {
+                $scope.message = error.message || '登录失败，请检查邮箱和密码';
+                $scope.$apply();
+                return;
             }
-        })
-        .catch(function(error) {
-            console.error('请求失败:', error);
-            $scope.message = '网络错误，请稍后再试';
+            localStorage.setItem('userId', data.user.id);
+            $scope.isLoggedIn = true;
+            $scope.message = '';
+            $scope.loadBookmarks(data.user.id);
+            $scope.$apply();
         });
     };
-
-    // 加载书签函数
+    
+    // 修改书签加载函数
     $scope.loadBookmarks = function(userId) {
-        $http.get(`${SERVER_URL}/bookmarks/${userId}`)
-        .then(function(response) {
-            $scope.bookmarks = response.data;
-        })
-        .catch(function(error) {
-            console.error('加载书签失败:', error);
-            $scope.message = '无法加载书签，请稍后再试';
-        });
+        supabase.from('bookmarks')
+            .select('*')
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false }) // 添加排序
+            .then(({ data, error }) => {
+                if (error) {
+                    console.error('加载书签失败:', error);
+                    $scope.message = '无法加载书签: ' + (error.message || '服务器错误');
+                    $scope.$apply();
+                    return;
+                }
+                $scope.bookmarks = data || []; // 确保总是数组
+                $scope.$apply();
+            });
     };
-
-    // 登出函数
+    
+    // 修改登出函数
     $scope.logout = function() {
-        localStorage.removeItem('userId');
-        $scope.isLoggedIn = false;
-        $scope.username = '';
-        $scope.password = '';
-        $scope.message = '';
-        $scope.bookmarks = [];
-        alert('已成功登出');
+        supabase.auth.signOut()
+            .then(() => {
+                localStorage.removeItem('userId');
+                $scope.isLoggedIn = false;
+                $scope.username = '';
+                $scope.password = '';
+                $scope.message = '';
+                $scope.bookmarks = [];
+                $scope.$apply();
+                alert('已成功登出');
+            });
     };
 
     // 页面加载时检查登录状态
@@ -70,3 +86,7 @@ app.controller('AuthController', ['$scope', '$http', function($scope, $http) {
         $scope.loadBookmarks(userId);
     }
 }]);
+
+// 当前登录逻辑使用username，但Supabase使用email
+// 建议修改登录表单的placeholder：
+<input type="text" ng-model="username" placeholder="邮箱" required>
