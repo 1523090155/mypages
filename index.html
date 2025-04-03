@@ -16,7 +16,7 @@
         <div class="auth-section" ng-controller="AuthController">
             <!-- 登录框 -->
             <div id="loginBox" ng-show="!isLoggedIn">
-                <h2>个人书签</h2>
+                <h2>服务导航</h2>
                 <form id="loginForm" ng-submit="login()">
                     <input type="text" ng-model="username" placeholder="用户名" required>
                     <input type="password" ng-model="password" placeholder="密码" required>
@@ -28,7 +28,7 @@
             <!-- 已登录书签管理 -->
             <div id="bookmarks" ng-show="isLoggedIn">
                 <div class="bookmark-header">
-                    <h3>我的书签</h3>
+                    <h3>个人书签</h3>
                     <button ng-click="logout()" class="logout-btn">退出登录</button>
                 </div>
                 <div id="bookmarkList" class="grid">
@@ -43,7 +43,7 @@
             <!-- VPS服务 -->
             <div class="card">
                 <a href="https://vps.111600.xyz/">
-                    <div class="card-icon">🚀</div>
+
                     <div class="card-content">
                         <div class="card-title">服务器探针</div>
                         <div class="card-desc">实时监控服务器状态与性能指标</div>
@@ -54,7 +54,7 @@
             <!-- 社区论坛 -->
             <div class="card">
                 <a href="https://www.nodeseek.com/">
-                    <div class="card-icon">💬</div>
+
                     <div class="card-content">
                         <div class="card-title">技术社区</div>
                         <div class="card-desc">NodeSeek 交流论坛</div>
@@ -65,7 +65,7 @@
             <!-- VPS控制台 -->
             <div class="card">
                 <a href="https://bwh81.net/clientarea.php">
-                    <div class="card-icon">🔧</div>
+ 
                     <div class="card-content">
                         <div class="card-title">搬瓦工控制台</div>
                         <div class="card-desc">服务器管理</div>
@@ -75,7 +75,7 @@
      <!-- 新增：CloudCone VPS -->
      <div class="card"> 
          <a href="https://app.cloudcone.com/vps"> 
-             <div class="card-icon">🚀</div> 
+
              <div class="card-content"> 
                  <div class="card-title">CloudCone VPS</div> 
                  <div class="card-desc">CC VPS服务</div> 
@@ -86,7 +86,7 @@
      <!-- 新增：Akile IO 服务器管理 -->
      <div class="card"> 
          <a href="https://akile.io/console/server"> 
-             <div class="card-icon">🔧</div> 
+
              <div class="card-content"> 
                  <div class="card-title">Akile IO 服务器管理</div> 
                  <div class="card-desc">Akile vps</div> 
@@ -97,7 +97,7 @@
      <!-- 新增：MHYIDC -->
      <div class="card"> 
          <a href="https://mhyidc.com"> 
-             <div class="card-icon">🌐</div> 
+
              <div class="card-content"> 
                  <div class="card-title">MHYIDC</div> 
                  <div class="card-desc">香港ipv6</div> 
@@ -108,7 +108,7 @@
      <!-- 新增：RackNerd 客户区域 -->
      <div class="card"> 
          <a href="https://my.racknerd.com/index.php?rp=/login"> 
-             <div class="card-icon">🔒</div> 
+
              <div class="card-content"> 
                  <div class="card-title">RackNerd 客户区域</div> 
                  <div class="card-desc">登录账户</div> 
@@ -119,7 +119,7 @@
      <!-- 新增：RackNerd NVM 控制台 -->
      <div class="card"> 
          <a href="https://nerdvm.racknerd.com/login.php"> 
-             <div class="card-icon">💻</div> 
+
              <div class="card-content"> 
                  <div class="card-title">RackNerd 控制台</div> 
                  <div class="card-desc">服务器管理</div> 
@@ -130,7 +130,7 @@
      <!-- 新增：ProtonMail -->
      <div class="card"> 
          <a href="https://proton.me"> 
-             <div class="card-icon">📧</div> 
+
              <div class="card-content"> 
                  <div class="card-title">ProtonMail</div> 
                  <div class="card-desc">端到端加密邮件服务</div> 
@@ -141,7 +141,7 @@
      <!-- 新增：Cloudflare -->
      <div class="card"> 
          <a href="https://cloudflare.com"> 
-             <div class="card-icon">☁️</div> 
+
              <div class="card-content"> 
                  <div class="card-title">Cloudflare</div> 
                  <div class="card-desc">加速、安全与性能优化服务</div> 
@@ -152,7 +152,7 @@
      <!-- 新增：ITDog -->
      <div class="card"> 
          <a href="https://www.itdog.cn"> 
-             <div class="card-icon">🐶</div> 
+
              <div class="card-content"> 
                  <div class="card-title">ITDog</div> 
                  <div class="card-desc">IP测试</div> 
@@ -161,7 +161,7 @@
      </div>
      <div class="card"> 
         <a href="https://bwg.111600.xyz:9000/zxcvbnm/xui/"> 
-            <div class="card-icon">♚</div> 
+
             <div class="card-content"> 
                 <div class="card-title">瓦工入站</div> 
                 <div class="card-desc">节点管理</div> 
@@ -170,7 +170,7 @@
     </div>
     <div class="card"> 
         <a href="https://rn.111600.xyz:2053/zxcvbnm/xui/"> 
-            <div class="card-icon">♚</div> 
+
             <div class="card-content"> 
                 <div class="card-title">RN入站</div> 
                 <div class="card-desc">节点管理</div> 
@@ -179,7 +179,7 @@
     </div>
     <div class="card"> 
         <a href="https://jp.111600.xyz:2053/zxcvbnm/xui/"> 
-            <div class="card-icon">♚</div> 
+
             <div class="card-content"> 
                 <div class="card-title">Aklie入站</div> 
                 <div class="card-desc">节点管理</div> 
@@ -189,12 +189,12 @@
 
     <div class="card"> 
     <a href="https://alist.111600.xyz/"> 
-        <div class="card-icon">🌏</div> 
+
         <div class="card-content"> 
             <div class="card-title">alistRN</div> 
             <div class="card-desc">alist</div> 
         </div> 
-    </a> 
+      </a> 
     </div>
             <!-- 其他服务卡片...（保持相同结构） -->
             
