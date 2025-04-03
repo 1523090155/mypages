@@ -4,12 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>云服务导航中心</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- 引入 style.css 文件 -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" as="style">
+    <link rel="preload" href="css/style.css" as="style">
+    <link rel="preload" href="js/app.js" as="script">
     <link rel="stylesheet" href="css/style.css">
     <!-- 引入AngularJS库 -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="js/app.js"></script>
+    <!-- 在head部分添加DNS预连接 -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//ajax.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
     <div style="margin: 20px 0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px;">
@@ -30,8 +36,12 @@
             <button ng-click="logout()" class="logout-btn">退出登录</button>
         </div>
         <div id="bookmarkList" class="grid">
-            <div class="bookmark" ng-repeat="bookmark in bookmarks">
-                <a href="{{bookmark.url}}" target="_blank">{{bookmark.title}}</a>
+            <!-- 手动添加书签 -->
+            <div class="bookmark">
+                <a href="https://example.com" target="_blank">示例书签 1</a>
+            </div>
+            <div class="bookmark">
+                <a href="https://example.org" target="_blank">示例书签 2</a>
             </div>
         </div>
     </div>       
