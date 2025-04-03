@@ -14,8 +14,8 @@
     <div ng-controller="AuthController">
         <!-- 登录表单 -->
         <div ng-hide="isLoggedIn">
-            <h1>云服务导航中心</h1>
-            <form action="/submit-login" method="POST">
+            <h2>云服务导航中心</h2>
+            <form ng-submit="submitForm()">
                 <input type="text" ng-model="username" placeholder="用户名">
                 <input type="password" ng-model="password" placeholder="密码" class="ng-pristine ng-untouched ng-valid ng-empty">
                 <button type="submit">登录</button>
