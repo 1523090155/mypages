@@ -1,7 +1,5 @@
-remote_theme: pages-themes/modernist@v0.2.0
-plugins:
-- jekyll-remote-theme # add this line to the plugins list if you already have one
-title: my blog
-description: 学习和杂货
-google_analytics: UA-XXXXXX-X # 如果需要添加 Google Analytics 跟踪
-show_downloads: true # 是否显示下载链接
+title: my blog pages
+description: Modernist is a theme for GitHub Pages.
+show_downloads: true
+google_analytics:
+theme: modernist
