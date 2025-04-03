@@ -9,8 +9,9 @@ const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: false,  // 禁用URL中的session检测
-    flowType: 'pkce'           // 使用PKCE流程
+    detectSessionInUrl: false,
+    flowType: 'pkce',
+    redirectTo: null  // 明确设置为null防止任何重定向
   }
 });
 
@@ -25,14 +26,13 @@ app.controller('AuthController', ['$scope', '$http', function($scope, $http) {
 
     // 修改登录函数
     // 当前错误处理可以更完善
-    $scope.login = function() {
+    $scope.login = function(event) {  // 添加event参数
         if (!$scope.username || !$scope.password) {
             $scope.message = '邮箱和密码不能为空';
             return;
         }
         
-        // 阻止表单默认提交行为
-        event.preventDefault();
+        if(event) event.preventDefault();  // 安全地阻止默认行为
         
         supabase.auth.signInWithPassword({
             email: $scope.username,
