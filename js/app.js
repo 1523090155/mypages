@@ -104,6 +104,32 @@ app.controller('AuthController', ['$scope', '$http', function($scope, $http) {
         $scope.isLoggedIn = true;
         $scope.loadBookmarks(userId);
     }
+    
+    // 新增会话验证标志
+    $scope.sessionChecked = false;
+
+    // 修改初始化检查逻辑
+    const checkSession = async () => {
+        const { data: { user }, error } = await supabase.auth.getUser();
+        if (error || !user) {
+            localStorage.removeItem('userId');
+            $scope.isLoggedIn = false;
+        } else {
+            $scope.isLoggedIn = true;
+            $scope.loadBookmarks(user.id);
+        }
+        $scope.sessionChecked = true; // 标记会话检查完成
+        $scope.$apply();
+    };
+
+    // 页面加载时检查登录状态
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+        checkSession(); // 改为异步验证
+    } else {
+        $scope.sessionChecked = true; // 无会话时直接显示登录界面
+        $scope.$apply();
+    }
 }]);
 
 
