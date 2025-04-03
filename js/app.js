@@ -9,9 +9,9 @@ const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: false,
+    detectSessionInUrl: false, // ✔️ 已禁用URL session检测
     flowType: 'pkce',
-    redirectTo: null  // 明确设置为null防止任何重定向
+    redirectTo: null // ✔️ 已明确禁止重定向
   }
 });
 
@@ -26,7 +26,8 @@ app.controller('AuthController', ['$scope', '$http', function($scope, $http) {
 
     // 修改登录函数
     // 当前错误处理可以更完善
-    $scope.login = function(event) {  // 添加event参数
+    $scope.login = function(event) { // ✔️ 正确接收event参数
+      if(event) event.preventDefault(); // ✔️ 阻止默认提交行为
         if (!$scope.username || !$scope.password) {
             $scope.message = '邮箱和密码不能为空';
             return;
@@ -53,6 +54,14 @@ app.controller('AuthController', ['$scope', '$http', function($scope, $http) {
             
             // 可选：手动导航到主页
             // window.location.hash = '/home';
+            // 在登录成功回调中添加以下调试代码
+            console.log('登录成功后的URL:', window.location.href);
+            if (window.location.hash) {
+              console.warn('检测到URL哈希片段:', window.location.hash);
+            }
+            
+            // 建议在登录成功回调中添加
+            window.history.replaceState({}, document.title, window.location.pathname);
         });
     };
     
