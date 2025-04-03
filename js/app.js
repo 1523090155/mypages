@@ -2,7 +2,7 @@
 var app = angular.module('bookmarkApp', []);
 
 // 定义新的服务端地址
-const SERVER_URL = 'https://marks.111600.xyz';
+const SERVER_URL = 'http://140.82.5.217:3000';
 
 // 创建认证控制器
 app.controller('AuthController', ['$scope', '$http', function($scope, $http) {
@@ -43,10 +43,11 @@ app.controller('AuthController', ['$scope', '$http', function($scope, $http) {
     // 加载书签函数
     $scope.loadBookmarks = function(userId) {
         $http.get(`${SERVER_URL}/bookmarks/${userId}`)
-        .then(function(response) {
+       .then(function(response) {
             $scope.bookmarks = response.data;
+            console.log('Bookmarks:', $scope.bookmarks); // 添加调试输出
         })
-        .catch(function(error) {
+       .catch(function(error) {
             console.error('加载书签失败:', error);
             $scope.message = '无法加载书签，请稍后再试';
         });
