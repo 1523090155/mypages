@@ -19,19 +19,20 @@
             <input type="text" ng-model="username" placeholder="用户名" required style="margin-bottom: 10px;">
             <input type="password" ng-model="password" placeholder="密码" required style="margin-bottom: 10px;">
             <input type="submit" value="登录" style="margin-top: 10px;">
-            <div style="margin-top: 10px;">{{message}}</div>
         </form>
+        <div id="message" class="message">{{message}}</div>
     </div>
-    <!-- 公共书签，使用 ng-show 指令控制显示 -->
-    <div class="grid" ng-show="isAuthenticated">
-         <!-- 使用 ng-repeat 遍历书签数组 -->
-         <div class="card" ng-repeat="bookmark in bookmarks">
-            <a href="{{bookmark.url}}">
-                <div class="card-content">
-                    <div class="card-title">{{bookmark.title}}</div>
-                    <div class="card-desc">{{bookmark.description}}</div>
-                </div>
-            </a>
+
+    <!-- 已登录书签管理 -->
+    <div id="bookmarks" ng-show="isLoggedIn">
+        <div class="bookmark-header">
+            <h3>我的书签</h3>
+            <button ng-click="logout()" class="logout-btn">退出登录</button>
+        </div>
+        <div id="bookmarkList" class="grid">
+            <div class="bookmark" ng-repeat="bookmark in bookmarks">
+                <a href="{{bookmark.url}}" target="_blank">{{bookmark.title}}</a>
+            </div>
         </div>
     </div>       
     <!-- 公共书签 -->        
