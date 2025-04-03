@@ -17,7 +17,7 @@
         <div class="auth-section" ng-controller="AuthController">
             <!-- 登录框 -->
             <div id="loginBox" ng-show="!isLoggedIn">
-                <h2>🔒 会员专属书签</h2>
+                <h2>个人书签</h2>
                 <form id="loginForm" ng-submit="login()">
                     <input type="text" ng-model="username" placeholder="用户名" required>
                     <input type="password" ng-model="password" placeholder="密码" required>
@@ -25,7 +25,7 @@
                 </form>
                 <div id="message" class="message">{{message}}</div>
             </div>
-            
+            <h2>书签</h2>
             <!-- 已登录书签管理 -->
             <div id="bookmarks" ng-show="isLoggedIn">
                 <div class="bookmark-header">
