@@ -4,166 +4,201 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>云服务导航中心</title>
-    <!-- 引入 AngularJS 库 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- 引入AngularJS库 -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="js/app.js"></script>
-    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!-- 认证区域 -->
-    <div ng-controller="AuthController">
-        <!-- 登录表单 -->
-        <div ng-hide="isLoggedIn">
-            <form ng-submit="submitForm()">
-                <input type="text" ng-model="username" placeholder="用户名" required>
-                <input type="password" ng-model="password" placeholder="密码" required>
-                <button type="submit">登录</button>
-            </form>
-            <p>{{message}}</p>
+    <div class="container">
+        <h1>云服务导航中心</h1>
+        <!-- 用户认证区域 -->
+        <div class="auth-section" ng-controller="AuthController">
+            <!-- 登录框 -->
+            <div id="loginBox" ng-show="!isLoggedIn">
+                <h2>🔒 会员专属书签</h2>
+                <form id="loginForm" ng-submit="login()">
+                    <input type="text" ng-model="username" placeholder="用户名" required>
+                    <input type="password" ng-model="password" placeholder="密码" required>
+                    <button type="submit">登录</button>
+                </form>
+                <div id="message" class="message">{{message}}</div>
+            </div>
+            
+            <!-- 已登录书签管理 -->
+            <div id="bookmarks" ng-show="isLoggedIn">
+                <div class="bookmark-header">
+                    <h3>我的书签</h3>
+                    <button ng-click="logout()" class="logout-btn">退出登录</button>
+                </div>
+                <div id="bookmarkList" class="grid">
+                    <div class="bookmark" ng-repeat="bookmark in bookmarks">
+                        <a href="{{bookmark.url}}" target="_blank">{{bookmark.title}}</a>
+                    </div>
+                </div>
+            </div>
         </div>
+        <!-- 公共书签 -->        
+        <div class="grid">
+            <!-- VPS服务 -->
+            <div class="card">
+                <a href="https://vps.111600.xyz/">
+                    <div class="card-icon">🚀</div>
+                    <div class="card-content">
+                        <div class="card-title">服务器探针</div>
+                        <div class="card-desc">实时监控服务器状态与性能指标</div>
+                    </div>
+                </a>
+            </div>
 
-        <!-- 书签列表和登出按钮 -->
-        <div ng-show="isLoggedIn">
-            <h2>我的书签</h2>
-            <ul>
-                <li ng-repeat="bookmark in bookmarks">
-                    <a href="{{bookmark.url}}" target="_blank">{{bookmark.title}}</a>
-                </li>
-            </ul>
-            <button ng-click="logout()">登出</button>
-        </div>
+            <!-- 社区论坛 -->
+            <div class="card">
+                <a href="https://www.nodeseek.com/">
+                    <div class="card-icon">💬</div>
+                    <div class="card-content">
+                        <div class="card-title">技术社区</div>
+                        <div class="card-desc">NodeSeek 交流论坛</div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- VPS控制台 -->
+            <div class="card">
+                <a href="https://bwh81.net/clientarea.php">
+                    <div class="card-icon">🔧</div>
+                    <div class="card-content">
+                        <div class="card-title">搬瓦工控制台</div>
+                        <div class="card-desc">服务器管理</div>
+                    </div>
+                </a>
+            </div>
+     <!-- 新增：CloudCone VPS -->
+     <div class="card"> 
+         <a href="https://app.cloudcone.com/vps"> 
+             <div class="card-icon">🚀</div> 
+             <div class="card-content"> 
+                 <div class="card-title">CloudCone VPS</div> 
+                 <div class="card-desc">CC VPS服务</div> 
+             </div> 
+         </a> 
+     </div>
+
+     <!-- 新增：Akile IO 服务器管理 -->
+     <div class="card"> 
+         <a href="https://akile.io/console/server"> 
+             <div class="card-icon">🔧</div> 
+             <div class="card-content"> 
+                 <div class="card-title">Akile IO 服务器管理</div> 
+                 <div class="card-desc">Akile vps</div> 
+             </div> 
+         </a> 
+     </div>
+
+     <!-- 新增：MHYIDC -->
+     <div class="card"> 
+         <a href="https://mhyidc.com"> 
+             <div class="card-icon">🌐</div> 
+             <div class="card-content"> 
+                 <div class="card-title">MHYIDC</div> 
+                 <div class="card-desc">香港ipv6</div> 
+             </div> 
+         </a> 
+     </div>
+
+     <!-- 新增：RackNerd 客户区域 -->
+     <div class="card"> 
+         <a href="https://my.racknerd.com/index.php?rp=/login"> 
+             <div class="card-icon">🔒</div> 
+             <div class="card-content"> 
+                 <div class="card-title">RackNerd 客户区域</div> 
+                 <div class="card-desc">登录账户</div> 
+             </div> 
+         </a> 
+     </div>
+
+     <!-- 新增：RackNerd NVM 控制台 -->
+     <div class="card"> 
+         <a href="https://nerdvm.racknerd.com/login.php"> 
+             <div class="card-icon">💻</div> 
+             <div class="card-content"> 
+                 <div class="card-title">RackNerd 控制台</div> 
+                 <div class="card-desc">服务器管理</div> 
+             </div> 
+         </a> 
+     </div>
+
+     <!-- 新增：ProtonMail -->
+     <div class="card"> 
+         <a href="https://proton.me"> 
+             <div class="card-icon">📧</div> 
+             <div class="card-content"> 
+                 <div class="card-title">ProtonMail</div> 
+                 <div class="card-desc">端到端加密邮件服务</div> 
+             </div> 
+         </a> 
+     </div>
+
+     <!-- 新增：Cloudflare -->
+     <div class="card"> 
+         <a href="https://cloudflare.com"> 
+             <div class="card-icon">☁️</div> 
+             <div class="card-content"> 
+                 <div class="card-title">Cloudflare</div> 
+                 <div class="card-desc">加速、安全与性能优化服务</div> 
+             </div> 
+         </a> 
+     </div>
+
+     <!-- 新增：ITDog -->
+     <div class="card"> 
+         <a href="https://www.itdog.cn"> 
+             <div class="card-icon">🐶</div> 
+             <div class="card-content"> 
+                 <div class="card-title">ITDog</div> 
+                 <div class="card-desc">IP测试</div> 
+             </div> 
+         </a> 
+     </div>
+     <div class="card"> 
+        <a href="https://bwg.111600.xyz:9000/zxcvbnm/xui/"> 
+            <div class="card-icon">♚</div> 
+            <div class="card-content"> 
+                <div class="card-title">瓦工入站</div> 
+                <div class="card-desc">节点管理</div> 
+            </div> 
+        </a> 
+    </div>
+    <div class="card"> 
+        <a href="https://rn.111600.xyz:2053/zxcvbnm/xui/"> 
+            <div class="card-icon">♚</div> 
+            <div class="card-content"> 
+                <div class="card-title">RN入站</div> 
+                <div class="card-desc">节点管理</div> 
+            </div> 
+        </a> 
+    </div>
+    <div class="card"> 
+        <a href="https://jp.111600.xyz:2053/zxcvbnm/xui/"> 
+            <div class="card-icon">♚</div> 
+            <div class="card-content"> 
+                <div class="card-title">Aklie入站</div> 
+                <div class="card-desc">节点管理</div> 
+            </div> 
+        </a> 
     </div>
 
-    <!-- 公共书签 -->
-    <div class="grid">
-        <!-- 以下是新增的书签卡片 -->
-        <div class="card">
-            <a href="https://vps.111600.xyz:443/">
-                <div class="card-content">
-                    <div class="card-title">vps.111600.xyz</div>
-                    <div class="card-desc">针</div>
-                </div>
-            </a>
-        </div>
-        <div class="card">
-            <a href="https://www.nodeseek.com/">
-                <div class="card-content">
-                    <div class="card-title">nodeseek.com</div>
-                    <div class="card-desc">node论坛</div>
-                </div>
-            </a>
-        </div>
-        <div class="card">
-            <a href="https://bwh81.net/clientarea.php">
-                <div class="card-content">
-                    <div class="card-title">bwh81.net 客户区</div>
-                    <div class="card-desc">bwh81 面板</div>
-                </div>
-            </a>
-        </div>
-        <div class="card">
-            <a href="https://app.cloudcone.com/vps">
-                <div class="card-content">
-                    <div class="card-title">cloudcone VPS</div>
-                    <div class="card-desc">cloudcone 的 VPS 服务</div>
-                </div>
-            </a>
-        </div>
-        <div class="card">
-            <a href="https://akile.io/console/server">
-                <div class="card-content">
-                    <div class="card-title">akile.io </div>
-                    <div class="card-desc">akile.io 控制台</div>
-                </div>
-            </a>
-        </div>
-        <div class="card">
-            <a href="https://mhyidc.com">
-                <div class="card-content">
-                    <div class="card-title">mhyidc.com</div>
-                    <div class="card-desc">IDC 服务网站（hk）</div>
-                </div>
-            </a>
-        </div>
-        <div class="card">
-            <a href="https://my.racknerd.com/index.php?rp=/login">
-                <div class="card-content">
-                    <div class="card-title">racknerd 登录</div>
-                    <div class="card-desc">racknerd 服务登录页面</div>
-                </div>
-            </a>
-        </div>
-        <div class="card">
-            <a href="https://nerdvm.racknerd.com/login.php">
-                <div class="card-content">
-                    <div class="card-title">nerdvm.racknerd </div>
-                    <div class="card-desc">nerdvm.racknerd 面板登录页面</div>
-                </div>
-            </a>
-        </div>
-        <div class="card">
-            <a href="https://proton.me">
-                <div class="card-content">
-                    <div class="card-title">proton.me</div>
-                    <div class="card-desc">.ME邮箱</div>
-                </div>
-            </a>
-        </div>
-        <div class="card">
-            <a href="https://cloudflare.com">
-                <div class="card-content">
-                    <div class="card-title">cloudflare.com</div>
-                    <div class="card-desc">知名网络服务提供商</div>
-                </div>
-            </a>
-        </div>
-        <div class="card">
-            <a href="https://www.itdog.cn">
-                <div class="card-content">
-                    <div class="card-title">itdog.cn</div>
-                    <div class="card-desc">IP相关服务网站</div>
-                </div>
-            </a>
-        </div>
-        <div class="card">
-            <a href="https://massivegrid.com">
-                <div class="card-content">
-                    <div class="card-title">massivegrid.com</div>
-                    <div class="card-desc">UK vps</div>
-                </div>
-            </a>
-        </div>
-        <div class="card">
-            <a href="https://my.vultr.com">
-                <div class="card-content">
-                    <div class="card-title">vultr 管理页面</div>
-                    <div class="card-desc">vultr 服务管理页面</div>
-                </div>
-            </a>
-        </div>
-        <div class="card">
-            <a href="https://shuqian.111600.xyz/">
-                <div class="card-content">
-                    <div class="card-title">shuqian.111600.xyz</div>
-                    <div class="card-desc">书签服务网站</div>
-                </div>
-            </a>
-        </div>
-        <div class="card">
-            <a href="https://tunnelbroker.net/">
-                <div class="card-content">
-                    <div class="card-title">tunnelbroker.net</div>
-                    <div class="card-desc">ipv6隧道服务网站</div>
-                </div>
-            </a>
-        </div>
-        <div class="card">
-            <a href="http://www.yishimei.cn/network/319.html">
-                <div class="card-content">
-                    <div class="card-title">yishimei.cn </div>
-                    <div class="card-desc">激活</div>
-                </div>
-            </a>
+    <div class="card"> 
+    <a href="https://alist.111600.xyz/"> 
+        <div class="card-icon">🌏</div> 
+        <div class="card-content"> 
+            <div class="card-title">alistRN</div> 
+            <div class="card-desc">alist</div> 
+        </div> 
+    </a> 
+    </div>
+            <!-- 其他服务卡片...（保持相同结构） -->
+            
         </div>
     </div>
 </body>
