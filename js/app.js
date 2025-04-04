@@ -44,19 +44,35 @@ app.controller('AuthController', [
     $scope.bookmarks = [];
     
     // 会话检查
+    // 修改会话检查逻辑
     const checkSession = async () => {
       try {
-        const { data: { user } } = await AuthService.getUser();
+        const { data: { user }, error } = await AuthService.getUser(); // 添加错误捕获
+        
+        if (error) throw error;  // 新增错误处理
+        
         if (user) {
           $scope.isLoggedIn = true;
-          loadBookmarks(user.id);
+          await loadBookmarks(user.id); // 添加await确保加载完成
         }
+      } catch (error) {
+        console.error('会话检查失败:', error); // 新增错误日志
+        $scope.message = '会话验证异常，请刷新页面';
       } finally {
         $scope.sessionChecked = true;
-        $scope.$apply();
+        $scope.$apply();  // 确保执行位置正确
       }
     };
-
+    
+    // 在控制器初始化部分下方添加超时处理
+    setTimeout(() => {
+      if (!$scope.sessionChecked) {
+        $scope.sessionChecked = true;
+        $scope.message = '会话验证超时，请检查网络';
+        $scope.$apply();
+      }
+    }, 5000); // 5秒超时机制
+    
     // 加载书签
     const loadBookmarks = async (userId) => {
       const { data } = await BookmarkService.getBookmarks(userId);
@@ -90,7 +106,7 @@ app.controller('AuthController', [
         const { error } = await AuthService.resetPassword($scope.username);
         $scope.message = error?.message || '重置邮件已发送，请查收';
       } finally {
-        $scope.$apply();
+        $scope.$apply(); // 移除非法HTML注释
       }
     };
 
