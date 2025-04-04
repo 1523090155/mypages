@@ -62,19 +62,22 @@ app.controller('AuthController', [
 
         if (bookmarkError) throw bookmarkError;
 
-        $scope.bookmarks = bookmarks || []; // 确保书签数据为数组
-        console.log('Bookmarks assigned to $scope:', $scope.bookmarks);
+        $scope.$apply(() => {
+          $scope.bookmarks = bookmarks || []; // 确保书签数据为数组
+          console.log('Bookmarks assigned to $scope:', $scope.bookmarks);
 
-        $scope.isLoggedIn = true;
-
-        $scope.$apply(); // 确保视图更新
+          $scope.isLoggedIn = true; // 更新登录状态
+          $scope.isRegister = false; // 确保登录框消失
+        });
       } 
       catch (error) {
-        $scope.message = error.message;
-        console.error('Error during login or fetching bookmarks:', error);
-        $scope.$apply(); // 确保错误信息也能正确渲染
+        $scope.$apply(() => {
+          $scope.message = error.message;
+          console.error('Error during login or fetching bookmarks:', error);
+        });
       }
     };
+
     $scope.showRegister = function() {
         $scope.isRegister = true;
         $scope.message = '';
