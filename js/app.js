@@ -2,8 +2,9 @@ var app = angular.module('bookmarkApp', []);
 
 // Supabase 配置
 const SUPABASE_URL = 'https://vfwrwhoqkifxlogoavod.supabase.co';
-const SUPABASE_KEY = 'eyJhbGci...'; // 保持您的原始密钥
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZmd3J3aG9xa2lmeGxvZ29hdm9kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM2ODc1NTYsImV4cCI6MjA1OTI2MzU1Nn0.HX_WGCy93SwmrIZjFOxf5Ma86jE3pNITIhZu-r6mbDI'; // 保持您的原始密钥
+// 修改变量名避免冲突
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
@@ -15,11 +16,11 @@ const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
 
 // 认证服务
 app.factory('AuthService', () => ({
-  login: (email, password) => supabase.auth.signInWithPassword({ email, password }),
-  register: (email, password) => supabase.auth.signUp({ email, password }),
-  logout: () => supabase.auth.signOut(),
-  getUser: () => supabase.auth.getUser(),
-  resetPassword: (email) => supabase.auth.resetPasswordForEmail(email)
+  login: (email, password) => supabaseClient.auth.signInWithPassword({ email, password }),
+  register: (email, password) => supabaseClient.auth.signUp({ email, password }),
+  logout: () => supabaseClient.auth.signOut(),
+  getUser: () => supabaseClient.auth.getUser(),
+  resetPassword: (email) => supabaseClient.auth.resetPasswordForEmail(email)
 }));
 
 // 书签服务
