@@ -4,12 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>云服务导航中心</title>
+    <!-- 字体与样式 -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
-    <!-- 引入AngularJS库 -->
+    <!-- 引入 AngularJS 和 Supabase -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-    <!-- 其他head内容保持不变 -->
-    <!-- 在AngularJS库之后添加Supabase库 -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/app.js"></script>
 </head>
@@ -18,54 +17,35 @@
         <!-- 用户认证区域 -->
         <div class="auth-section" ng-controller="AuthController">
             <!-- 登录框 -->
-            <!-- 在auth-section div中恢复登录表单 -->
-            <!-- 在登录框添加加载状态 -->
-            <!-- 修改登录框显示条件 -->
-            <!-- 用户认证区域 -->
-            <div class="auth-section" ng-controller="AuthController">
-                <!-- 登录框 -->
-                <div id="loginBox" ng-show="!isLoggedIn && sessionChecked">
-                    <h2>服务导航</h2>
-                    <form id="loginForm" ng-submit="login()">  <!-- 移除$event -->
-                        <div class="form-group">
-                            <input type="email" ng-model="username" 
-                                   placeholder="邮箱" required
-                                   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
-                            <div class="hint">请输入有效邮箱地址</div>
-                        </div>
-                        <div class="form-group">
-                            <input type="password" ng-model="password" 
-                                   placeholder="密码" required minlength="6">
-                            <div class="hint">密码至少6位字符</div>
-                        </div>
-                        <div class="action-links">
-                            <a href="#" ng-click="showRegister()">注册账号</a>
-                            <a href="#" ng-click="showReset()">忘记密码？</a>
-                        </div>
-                        <button type="submit" class="login-btn">登录</button>
-                    </form>
-                    <!-- 第三方登录 -->
-                    <div class="social-login">
-                        <button class="github-login" ng-click="loginWith('github')">
-                            GitHub登录
-                        </button>
+            <div id="loginBox" ng-show="!isLoggedIn && sessionChecked">
+                <h2>登录服务导航</h2>
+                <form id="loginForm" ng-submit="login()">
+                    <div class="form-group">
+                        <input type="email" ng-model="username" placeholder="邮箱" required
+                               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+                        <div class="hint">请输入有效邮箱地址</div>
                     </div>
-                    <div id="message" class="message">{{message}}</div>
+                    <div class="form-group">
+                        <input type="password" ng-model="password" placeholder="密码" required minlength="6">
+                        <div class="hint">密码至少6位字符</div>
+                    </div>
+                    <div class="action-links">
+                        <a href="#" ng-click="showRegister()">注册账号</a>
+                        <a href="#" ng-click="showReset()">忘记密码？</a>
+                    </div>
+                    <button type="submit" class="login-btn">登录</button>
+                </form>
+                <!-- 第三方登录 -->
+                <div class="social-login">
+                    <button class="github-login" ng-click="loginWith('github')">GitHub登录</button>
                 </div>
-
+                <div id="message" class="message">{{message}}</div>
+            </div>
             <div class="loading-overlay" ng-show="!sessionChecked">
                 <div class="loading-spinner"></div>
                 正在验证会话...
             </div>
-
-            <h2>服务导航</h2>  <!-- 冗余标题 -->
-                <form id="loginForm"      <!-- 重复表单 -->
-                      ng-submit="login($event)">
-                  <!-- 表单内容 -->
-                </form>
-                <div id="message" class="message">{{message}}</div>  <!-- 重复消息框 -->
-            </div>
-
+        </div>
             <!-- 已登录书签管理 -->
             <div id="bookmarks" ng-show="isLoggedIn">
                 <div class="bookmark-header">
