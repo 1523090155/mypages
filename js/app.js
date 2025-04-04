@@ -62,12 +62,13 @@ app.controller('AuthController', [
 
         if (bookmarkError) throw bookmarkError;
 
-        $scope.bookmarks = bookmarks;
+        $scope.bookmarks = bookmarks || []; // 确保书签数据为数组
         $scope.isLoggedIn = true;
-        $scope.$apply();
       } catch (error) {
         $scope.message = error.message;
         console.error('Error:', error);
+      } finally {
+        // 确保视图更新
         $scope.$apply();
       }
     };
