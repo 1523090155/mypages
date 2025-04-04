@@ -13,9 +13,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
     <script src="js/app.js?v=1.0" defer></script>
 
-    <!-- 修改后的密码输入框 -->
-    <input type="password" id="password" ng-model="password" 
-           placeholder="请输入密码" required autocomplete="current-password">
 
     <!-- 修改后的书签显示 -->
     <div class="bookmark" ng-repeat="bookmark in bookmarks">
@@ -26,38 +23,36 @@
     <div class="container">
         <!-- 用户认证区域 -->
         <div class="auth-section" ng-controller="AuthController">
-            <form ng-submit="login($event)" class="login-form">
+            <div ng-show="!isLoggedIn && sessionChecked">
+              <h2>服务导航</h2>
+              <form ng-submit="login($event)">
                 <div class="form-group">
-                    <label for="username">用户名</label>
-                    <input type="text" id="username" ng-model="username" placeholder="请输入用户名" required>
+                  <input type="text" ng-model="username" placeholder="邮箱" required>
                 </div>
                 <div class="form-group">
-                    <label for="password">密码</label>
-                    <input type="password" id="password" ng-model="password" placeholder="请输入密码" required>
+                  <input type="password" ng-model="password" placeholder="密码" required>
                 </div>
                 <button type="submit" class="login-btn">登录</button>
-                <div class="message" ng-if="message">{{message}}</div>
-            </form>
-        </div>
-        <!-- 已登录书签管理 -->
-        <div id="bookmarks" ng-show="isLoggedIn">
-            <div class="bookmark-header">
+              </form>
+              <div class="message">{{message}}</div>
+            </div>
+          
+            <!-- 书签显示区域 -->
+            <div id="bookmarks" ng-show="isLoggedIn">
+              <div class="bookmark-header">
                 <h3>个人书签</h3>
                 <button ng-click="logout()" class="logout-btn">退出登录</button>
-            </div>
-            <!-- 调试信息 -->
-            <pre>isLoggedIn: {{isLoggedIn}}</pre>
-            <pre>bookmarks: {{bookmarks | json}}</pre>
-            <div id="bookmarkList" class="grid">
+              </div>
+              <div id="bookmarkList" class="grid">
                 <div class="bookmark" ng-repeat="bookmark in bookmarks">
-                    <a href="{{bookmark.url}}" target="_blank">{{bookmark.title}}</a>
+                  <a ng-href="{{bookmark.url}}" target="_blank" ng-bind="bookmark.title"></a>
                 </div>
-                <!-- 新增：当书签为空时显示提示 -->
                 <div class="no-bookmarks" ng-if="bookmarks.length === 0">
-                    暂无书签，请添加书签。
+                  暂无书签，请添加书签。
                 </div>
+              </div>
             </div>
-        </div>
+          </div>
         <h2>   </h2>        
         <!-- 公共书签 -->        
         <div class="grid">
