@@ -41,22 +41,33 @@ app.controller('AuthController', [
 
     // 统一登录方法
     $scope.login = async function(event) {
-      if(event) event.preventDefault();
+      if (event) event.preventDefault();
       try {
         const { data, error } = await AuthService.login(
           $scope.username,
           $scope.password
         );
-        
+
         if (error) throw error;
-        
+
         localStorage.setItem('userId', data.user.id);
-        const { data: bookmarks } = await BookmarkService.getBookmarks(data.user.id);
+
+        // 调试日志：检查用户 ID
+        console.log('User ID:', data.user.id);
+
+        const { data: bookmarks, error: bookmarkError } = await BookmarkService.getBookmarks(data.user.id);
+
+        // 调试日志：检查书签数据
+        console.log('Bookmarks:', bookmarks);
+
+        if (bookmarkError) throw bookmarkError;
+
         $scope.bookmarks = bookmarks;
         $scope.isLoggedIn = true;
         $scope.$apply();
       } catch (error) {
         $scope.message = error.message;
+        console.error('Error:', error);
         $scope.$apply();
       }
     };
