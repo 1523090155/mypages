@@ -72,10 +72,6 @@ app.controller('AuthController', [
         $scope.$apply();
       }
     };
-
-    // 其他方法保持不变...
-    // 需要补充的方法
-    // 在控制器中添加
     $scope.showRegister = function() {
         $scope.isRegister = true;
         $scope.message = '';
