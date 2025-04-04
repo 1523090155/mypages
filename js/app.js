@@ -39,6 +39,39 @@ app.controller('AuthController', [
     $scope.isLoggedIn = false;
     $scope.bookmarks = [];
 
+    // 添加：检查会话状态
+    async function checkSession() {
+      try {
+        const { data: { user }, error } = await AuthService.getUser();
+        if (user) {
+          $scope.isLoggedIn = true;
+          const { data: bookmarks } = await BookmarkService.getBookmarks(user.id);
+          $scope.bookmarks = bookmarks || [];
+        }
+      } catch (error) {
+        console.error('Session check error:', error);
+      } finally {
+        $scope.sessionChecked = true;
+        $scope.$apply();
+      }
+    }
+
+    // 页面加载时检查会话
+    checkSession();
+
+    // 添加：退出登录方法
+    $scope.logout = async function() {
+      try {
+        await AuthService.logout();
+        $scope.isLoggedIn = false;
+        $scope.bookmarks = [];
+        localStorage.removeItem('userId');
+        $scope.$apply();
+      } catch (error) {
+        console.error('Logout error:', error);
+      }
+    };
+
     // 统一登录方法
     $scope.login = async function(event) {
       if (event) event.preventDefault();
