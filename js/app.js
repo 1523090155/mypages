@@ -6,8 +6,8 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 // 修改变量名避免冲突
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
   auth: {
-    autoRefreshToken: true,
-    persistSession: true,
+    autoRefreshToken: false,  // 禁用自动刷新token
+    persistSession: false,   // 不持久化会话
     detectSessionInUrl: false,
     flowType: 'pkce',
     redirectTo: null
@@ -73,6 +73,7 @@ app.controller('AuthController', [
     };
 
     // 统一登录方法
+    // 修改登录方法，添加会话过期时间
     $scope.login = async function(event) {
       if (event) event.preventDefault();
       try {
@@ -80,27 +81,29 @@ app.controller('AuthController', [
           $scope.username,
           $scope.password
         );
-
+    
         if (error) throw error;
-
-        localStorage.setItem('userId', data.user.id);
-
+    
+        // 不存储用户ID到localStorage
+        // 设置会话过期时间（例如1小时）
+        const expiresAt = Date.now() + 3600000; // 1小时后过期
+        
         // 调试日志：检查用户 ID
         console.log('User ID:', data.user.id);
-
+    
         const { data: bookmarks, error: bookmarkError } = await BookmarkService.getBookmarks(data.user.id);
-
+    
         // 调试日志：检查书签数据
         console.log('Bookmarks fetched from Supabase:', bookmarks);
-
+    
         if (bookmarkError) throw bookmarkError;
-
+    
         $scope.$apply(() => {
-          $scope.bookmarks = bookmarks || []; // 确保书签数据为数组
+          $scope.bookmarks = bookmarks || [];
           console.log('Bookmarks assigned to $scope:', $scope.bookmarks);
-
-          $scope.isLoggedIn = true; // 更新登录状态
-          $scope.isRegister = false; // 确保登录框消失
+          $scope.isLoggedIn = true;
+          $scope.isRegister = false;
+          $scope.sessionExpiresAt = expiresAt; // 存储过期时间
         });
       } 
       catch (error) {
@@ -110,6 +113,27 @@ app.controller('AuthController', [
         });
       }
     };
+    
+    // 添加会话过期检查
+    async function checkSession() {
+      try {
+        const { data: { user }, error } = await AuthService.getUser();
+        if (user && $scope.sessionExpiresAt && Date.now() < $scope.sessionExpiresAt) {
+          $scope.isLoggedIn = true;
+          const { data: bookmarks } = await BookmarkService.getBookmarks(user.id);
+          $scope.bookmarks = bookmarks || [];
+        } else {
+          await AuthService.logout();
+          $scope.isLoggedIn = false;
+          $scope.bookmarks = [];
+        }
+      } catch (error) {
+        console.error('Session check error:', error);
+      } finally {
+        $scope.sessionChecked = true;
+        $scope.$apply();
+      }
+    }
 
     $scope.showRegister = function() {
         $scope.isRegister = true;
