@@ -39,11 +39,11 @@
     <div id="bookmarks" ng-show="isLoggedIn" class="bg-green-100 rounded-lg shadow-md p-3">
         <div class="bookmark-header flex justify-between items-center mb-2">
             <h3 class="text-lg font-bold text-stone-600">个人书签</h3>
-            <button ng-click="logout()" class="logout-btn bg-green-200 hover:bg-green-300 text-amber-50 font-bold py-1 px-3 rounded text-sm">退出登录</button>
+            <button ng-click="logout()" class="logout-btn bg-green-200 hover:bg-green-300 text-stone-700 font-bold py-1 px-3 rounded text-sm">退出登录</button>
         </div>
         <div id="bookmarkList" class="grid grid-cols-3 gap-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
             <div class="bookmark bg-yellow-50 p-2 rounded-md shadow-sm hover:shadow-md transition-shadow" ng-repeat="bookmark in bookmarks">
-                <a ng-href="{{bookmark.url}}" target="_blank" ng-bind="bookmark.title" class="text-gray-600 hover:text-blue-600 text-sm">示例书签</a>
+                <a ng-href="{{bookmark.url}}" target="_blank" ng-bind="bookmark.title" class="text-gray-600 hover:text-green-300 text-sm">示例书签</a>
             </div>
             <div class="no-bookmarks text-gray-600 text-sm" ng-if="bookmarks.length === 0">
                 暂无书签，请添加书签。
