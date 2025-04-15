@@ -26,42 +26,35 @@
         <!-- 用户认证区域 -->
         <div class="auth-section" ng-controller="AuthController">
             <div ng-show="!isLoggedIn && sessionChecked">
-
-              <form ng-submit="login($event)" class="space-y-4">
-                <div class="form-container space-y-4">   
-                  <div class="form-group">
-                    <label for="email" class="sr-only">邮箱</label>
-                    <input type="email" id="email" ng-model="username" placeholder="邮箱" 
-                           class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-300" required>
-                  </div>
-                  <div class="form-group">
-                    <label for="password" class="sr-only">密码</label>
-                    <input type="password" id="password" ng-model="password" placeholder="密码" 
-                           class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-300" required>
-                  </div>
-                  <div class="form-group">
-                    <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-colors">
-                      登录
-                    </button>
-                  </div>
-                </div>
-              </form>
-              <div class="message text-red-500 font-medium text-sm mt-2" ng-cloak>{{message}}</div>
+                <form ng-submit="login($event)">
+                    <div class="form-container">
+                        <div class="form-group">
+                            <label for="email" class="sr-only">邮箱</label>
+                            <input type="email" id="email" ng-model="username" placeholder="邮箱" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="sr-only">密码</label>
+                            <input type="password" id="password" ng-model="password" placeholder="密码" required>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="login-btn">登录</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="message" ng-cloak>{{message}}</div>
             </div>
-          
-            <!-- 书签显示区域 -->
 
-             <div id="bookmarks" ng-show="isLoggedIn" class="bg-green-100 rounded-lg shadow-md p-3" ng-cloak>
-                 <div class="bookmark-header flex justify-between items-center mb-2">
-                     <h2 class="text-lg font-bold text-stone-600">个人书签</h2>
-                     <button ng-click="logout()" class="logout-btn bg-green-200 hover:bg-green-300 text-stone-700 font-bold py-1 px-3 rounded text-sm">退出登录</button>
+            <div id="bookmarks" ng-show="isLoggedIn" ng-cloak>
+                <div class="bookmark-header">
+                    <h2>个人书签</h2>
+                    <button ng-click="logout()" class="logout-btn">退出登录</button>
                 </div>
-                 <div id="bookmarkList" class="grid grid-cols-3 gap-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
-                 <div class="bookmark bg-yellow-50 p-2 rounded-md shadow-sm hover:shadow-md transition-shadow" ng-repeat="bookmark in bookmarks">
-                <a ng-href="{{bookmark.url}}" target="_blank" ng-bind="bookmark.title" class="text-gray-600 hover:text-green-300 text-sm">示例书签</a>
-                </div>
-                     <div class="no-bookmarks text-gray-600 text-sm" ng-if="bookmarks.length === 0">
-                暂无书签，请添加书签。
+                <div id="bookmarkList">
+                    <div class="bookmark" ng-repeat="bookmark in bookmarks">
+                        <a ng-href="{{bookmark.url}}" target="_blank" ng-bind="bookmark.title">示例书签</a>
+                    </div>
+                    <div class="no-bookmarks" ng-if="bookmarks.length === 0">
+                        暂无书签，请添加书签。
                     </div>
                 </div>
             </div>
