@@ -74,8 +74,12 @@ app.controller('AuthController', [
 
     // 统一登录方法
     // 修改登录方法，添加会话过期时间
+    // 可以在登录前添加表单验证
     $scope.login = async function(event) {
       if (event) event.preventDefault();
+      if (!$scope.username || !$scope.password) {
+        return $scope.message = '请输入邮箱和密码';
+      }
       try {
         const { data, error } = await AuthService.login(
           $scope.username,
@@ -115,6 +119,10 @@ app.controller('AuthController', [
     };
     
     // 添加会话过期检查
+    // 可以添加心跳检测或定时检查会话状态
+    setInterval(() => {
+      if($scope.isLoggedIn) checkSession();
+    }, 300000); // 每5分钟检查一次
     async function checkSession() {
       try {
         const { data: { user }, error } = await AuthService.getUser();
