@@ -139,23 +139,28 @@ h2 {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
+    align-items: center;
 }
-.form-group {
-    margin-bottom: 0;
-    flex: 1;
-    min-width: calc(50% - 7.5px); /* 考虑 gap 的宽度 */
-}
-input[type="text"], 
+
+/* 输入框样式 */
+input[type="text"],
 input[type="password"] {
-    width: 50%;
+    width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
+    box-sizing: border-box;
 }
 
+/* 表单组样式 */
+.form-group {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* 登录按钮样式 */
 .login-btn {
-    width: 50%;
-    padding: 10px;
+    padding: 10px 20px;
     background-color: #336666;
     color: white;
     border: none;
