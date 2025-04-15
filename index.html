@@ -23,6 +23,7 @@
             <div ng-show="!isLoggedIn && sessionChecked">
 
               <form ng-submit="login($event)">
+                <div class="form-container">   
                 <div class="form-group">
                   <input type="text" ng-model="username" placeholder="邮箱" required>
                 </div>
@@ -30,6 +31,7 @@
                   <input type="password" ng-model="password" placeholder="密码" required>
                 </div>
                 <button type="submit" class="login-btn">登录</button>
+            </div>
               </form>
               <div class="message">{{message}}</div>
             </div>
