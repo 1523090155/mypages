@@ -40,13 +40,13 @@ body {
 }
 
 h1 {
-    margin-top: 50px;    
-    font-size: 48px;  
+    margin-top: 20px;    
+    font-size: 32px;  
     text-align: center;
     color: #558B6E;
     /* 移除滚动动画，添加上下浮动动画 */
     animation: float 5s ease-in-out infinite alternate;
-    margin-bottom: 50px;
+    margin-bottom: 20px;
 }
 
 /* 新增标题浮动动画 */
@@ -140,14 +140,29 @@ h2 {
     margin-bottom: 2rem;
 }
 
+/* 修改表单容器样式 */
 .form-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;  /* 改为行排列 */
+    align-items: flex-end; /* 底部对齐 */
     gap: 1rem;
 }
 
+/* 调整表单组宽度 */
+.form-group {
+    flex: 1;  /* 自动填充剩余空间 */
+    min-width: 0;  /* 允许缩小 */
+}
+
+/* 调整登录按钮宽度 */
+.login-btn {
+    width: auto;  /* 改为自动宽度 */
+    min-width: 100px;  /* 设置最小宽度 */
+    flex-shrink: 0;  /* 禁止缩小 */
+}
+
 .form-group input {
-    width: 100%;
+    width: 90%;
     padding: 0.5rem 1rem;
     border: 1px solid #ddd;
     border-radius: 0.375rem;
@@ -160,7 +175,7 @@ h2 {
 }
 
 .login-btn {
-    width: 100%;
+    width: 90%;
     background-color: #22c55e;
     color: white;
     font-weight: bold;
