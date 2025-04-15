@@ -36,12 +36,12 @@
             </div>
           
             <!-- 书签显示区域 -->
-    <div id="bookmarks" ng-show="isLoggedIn" class="bg-gray-100 rounded-lg shadow-md mx-auto max-w-sm p-3">
+    <div id="bookmarks" ng-show="isLoggedIn" class="bg-gray-100 rounded-lg shadow-md p-3">
         <div class="bookmark-header flex justify-between items-center mb-2">
             <h3 class="text-lg font-bold text-gray-800">个人书签</h3>
             <button ng-click="logout()" class="logout-btn bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded text-sm">退出登录</button>
         </div>
-        <div id="bookmarkList" class="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4">
+        <div id="bookmarkList" class="grid grid-cols-3 gap-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
             <div class="bookmark bg-white p-2 rounded-md shadow-sm hover:shadow-md transition-shadow" ng-repeat="bookmark in bookmarks">
                 <a ng-href="{{bookmark.url}}" target="_blank" ng-bind="bookmark.title" class="text-blue-500 hover:text-blue-600 text-sm">示例书签</a>
             </div>
