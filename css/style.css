@@ -135,9 +135,10 @@ h2 {
 
 /* 添加表单基础样式 */
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 0;
+    flex: 1;
+    min-width: calc(50% - 7.5px); /* 考虑 gap 的宽度 */
 }
-
 input[type="text"], 
 input[type="password"] {
     width: 100%;
