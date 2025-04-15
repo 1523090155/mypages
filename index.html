@@ -22,7 +22,7 @@
         <!-- 用户认证区域 -->
         <div class="auth-section" ng-controller="AuthController">
             <div ng-show="!isLoggedIn && sessionChecked">
-              <h2>服务导航</h2>
+              <h1>服务导航</h1>
               <form ng-submit="login($event)">
                 <div class="form-group">
                   <input type="text" ng-model="username" placeholder="邮箱" required>
@@ -38,7 +38,7 @@
             <!-- 书签显示区域 -->
     <div id="bookmarks" ng-show="isLoggedIn" class="bg-green-100 rounded-lg shadow-md p-3">
         <div class="bookmark-header flex justify-between items-center mb-2">
-            <h3 class="text-lg font-bold text-stone-600">个人书签</h3>
+            <h2 class="text-lg font-bold text-stone-600">个人书签</h2>
             <button ng-click="logout()" class="logout-btn bg-green-200 hover:bg-green-300 text-stone-700 font-bold py-1 px-3 rounded text-sm">退出登录</button>
         </div>
         <div id="bookmarkList" class="grid grid-cols-3 gap-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
