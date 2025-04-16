@@ -1,7 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
 
+// Initialize AngularJS module before anything else
 var app = angular.module('bookmarkApp', []);
 
+// Then proceed with Supabase imports
 const supabaseUrl = window.SUPABASE_URL;
 const supabaseKey = window.SUPABASE_KEY;
 
