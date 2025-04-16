@@ -21,6 +21,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         
+      - name: Clean workspace
+        run: |
+          # 清除可能存在的旧缓存
+          git clean -ffdx
+          rm -rf node_modules/
+          
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
