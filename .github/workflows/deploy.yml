@@ -23,7 +23,6 @@ jobs:
         
       - name: Clean workspace
         run: |
-          # 清除可能存在的旧缓存
           git clean -ffdx
           rm -rf node_modules/
           
@@ -43,9 +42,9 @@ jobs:
         uses: actions/configure-pages@v3
         
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v1
         with:
           path: ./
           
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v1
