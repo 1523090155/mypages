@@ -28,7 +28,7 @@
         <!-- 用户认证区域 -->
         <div class="auth-section" ng-controller="AuthController">
             <div ng-show="!isLoggedIn && sessionChecked">
-                <form ng-submit="login($event)">
+                <form ng-submit="login($event)" action="javascript:void(0)">
                     <div class="form-container">
                         <div class="form-group">                       
                             <input type="email" id="email" ng-model="user.email" placeholder="邮箱" required>

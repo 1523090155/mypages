@@ -5,13 +5,13 @@ const SUPABASE_URL = process.env.SUPABASE_URL || '';
 const SUPABASE_KEY = process.env.SUPABASE_KEY || '';
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false,
-    detectSessionInUrl: false,
-    flowType: 'pkce',
-    redirectTo: null
-  }
+    auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+        detectSessionInUrl: false,
+        flowType: 'pkce',
+        redirectTo: window.location.origin // 确保回调地址正确
+    }
 });
 
 // 统一服务定义
@@ -84,8 +84,8 @@ app.controller('AuthController', [
     // 修改登录方法，添加会话过期时间
     // 可以在登录前添加表单验证
     $scope.login = async function(event) {
-      event.preventDefault(); // 阻止默认表单提交行为
-
+      event && event.preventDefault(); // 更安全的阻止默认行为
+      
       if (!$scope.user || !$scope.user.email || !$scope.user.password) {
           $scope.$apply(() => {
               $scope.message = '请输入邮箱和密码';
@@ -108,12 +108,12 @@ app.controller('AuthController', [
               $scope.bookmarks = bookmarks || [];
               $scope.isLoggedIn = true;
               $scope.sessionExpiresAt = expiresAt;
-              $scope.message = ''; // 登录成功后清空消息
+              $scope.message = '';
+              window.location.hash = ''; // 清除URL hash
           });
       } catch (error) {
           $scope.$apply(() => {
               $scope.message = error.message || '登录失败';
-              console.error('登录错误:', error);
           });
       }
     };
