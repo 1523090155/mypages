@@ -1,13 +1,9 @@
 var app = angular.module('bookmarkApp', []);
 
 
-// 修改为从多个来源获取Supabase配置
-const SUPABASE_URL = process.env.REACT_APP_SUPABASE_URL || 
-                     process.env.SUPABASE_URL || 
-                     window.__SUPABASE_CONFIG__?.url;
-const SUPABASE_KEY = process.env.REACT_APP_SUPABASE_KEY || 
-                     process.env.SUPABASE_KEY || 
-                     window.__SUPABASE_CONFIG__?.key;
+// 从配置文件获取 Supabase 配置
+const SUPABASE_URL = window.__SUPABASE_CONFIG__?.url;
+const SUPABASE_KEY = window.__SUPABASE_CONFIG__?.key;
 
 if (!SUPABASE_URL || !SUPABASE_KEY) {
   console.error('Supabase配置不完整', { SUPABASE_URL, SUPABASE_KEY });
