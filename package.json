@@ -6,7 +6,6 @@
     "build": "echo 'Building static assets...' && mkdir -p dist && cp -r *.html css/ js/ CNAME dist/"
   },
   "dependencies": {
-    // 可以移除@supabase/supabase-js依赖
     "gh-pages": "^4.0.0"
   }
 }
