@@ -1,197 +1,197 @@
 const getConfig = () => {
-    if (!window.SUPABASE_URL || !window.SUPABASE_KEY) {
-        throw new Error('未找到 Supabase 配置');
+    const url = window.SUPABASE_URL;
+    const key = window.SUPABASE_KEY;
+    
+    if (!url || !key || url.includes('__SUPABASE_URL__') || key.includes('__SUPABASE_KEY__')) {
+        console.error('Supabase 配置无效');
+        return null;
     }
-    return {
-        url: window.SUPABASE_URL,
-        key: window.SUPABASE_KEY
-    };
+    return { url, key };
 };
 
 var app = angular.module('bookmarkApp', []);
 
 const supabaseClient = (() => {
+    const config = getConfig();
+    if (!config) return null;
+    
     try {
-        const config = getConfig();
-        return supabase.createClient(config.url, config.key, {
-            auth: {
-                autoRefreshToken: false,
-                persistSession: false,
-                detectSessionInUrl: false
-            }
-        });
+        return supabase.createClient(config.url, config.key);
     } catch (error) {
         console.error('Supabase 客户端初始化失败:', error);
         return null;
     }
 })();
 
-const checkConnection = async () => {
-    try {
-        const config = getConfig();
-        const response = await fetch(config.url, { method: 'HEAD' });
-        return response.ok;
-    } catch (e) {
-        console.error('连接检查失败:', e);
-        return false;
-    }
-};
-
 // 统一服务定义
 app.factory('AuthService', () => ({
-  login: (email, password) => supabaseClient.auth.signInWithPassword({ email, password }),
-  logout: () => supabaseClient.auth.signOut(),
-  getUser: () => supabaseClient.auth.getUser()
+    login: async (email, password) => {
+        if (!supabaseClient) throw new Error('服务未初始化');
+        return supabaseClient.auth.signInWithPassword({ email, password });
+    },
+    logout: async () => {
+        if (!supabaseClient) throw new Error('服务未初始化');
+        return supabaseClient.auth.signOut();
+    },
+    getUser: async () => {
+        if (!supabaseClient) throw new Error('服务未初始化');
+        return supabaseClient.auth.getUser();
+    }
 }));
 
 app.factory('BookmarkService', () => ({
-  getBookmarks: (userId) => supabaseClient.from('bookmarks')
-    .select('*')
-    .eq('user_id', userId)
-    .order('created_at', { ascending: false })
+    getBookmarks: async (userId) => {
+        if (!supabaseClient) throw new Error('服务未初始化');
+        return supabaseClient.from('bookmarks')
+            .select('*')
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false });
+    }
 }));
 
-// 唯一控制器定义
 app.controller('AuthController', [
-  '$scope',
-  'AuthService',
-  'BookmarkService',
-  ($scope, AuthService, BookmarkService) => {
-    $scope.checkingConnection = true;
+    '$scope',
+    'AuthService',
+    'BookmarkService',
+    '$timeout',
+    ($scope, AuthService, BookmarkService, $timeout) => {
+        $scope.checkingConnection = true;
+        $scope.sessionChecked = false;
+        $scope.isLoggedIn = false;
+        $scope.bookmarks = [];
+        $scope.message = '';
 
-    const initialize = async () => {
-        try {
-            $scope.checkingConnection = true;
-            const isConnected = await checkConnection();
-            
-            if (!isConnected) {
-                $scope.$apply(() => {
-                    $scope.message = '连接服务器失败，请检查网络';
+        const safeApply = (fn) => {
+            try {
+                const phase = $scope.$root.$$phase;
+                if (phase === '$apply' || phase === '$digest') {
+                    if (fn && typeof fn === 'function') {
+                        fn();
+                    }
+                } else {
+                    $scope.$apply(fn);
+                }
+            } catch (e) {
+                console.error('safeApply error:', e);
+            }
+        };
+
+        const initialize = async () => {
+            try {
+                if (!supabaseClient) {
+                    throw new Error('服务未初始化');
+                }
+                
+                const config = getConfig();
+                if (!config) {
+                    throw new Error('配置无效');
+                }
+
+                safeApply(() => {
                     $scope.checkingConnection = false;
+                });
+
+                await checkSession();
+            } catch (error) {
+                console.error('初始化错误:', error);
+                safeApply(() => {
+                    $scope.message = error.message || '系统初始化失败';
+                    $scope.checkingConnection = false;
+                });
+            }
+        };
+
+        const checkSession = async () => {
+            try {
+                const { data: { user }, error } = await AuthService.getUser();
+                
+                safeApply(() => {
+                    if (user) {
+                        $scope.isLoggedIn = true;
+                        BookmarkService.getBookmarks(user.id)
+                            .then(({ data: bookmarks }) => {
+                                safeApply(() => {
+                                    $scope.bookmarks = bookmarks || [];
+                                });
+                            });
+                    } else {
+                        $scope.isLoggedIn = false;
+                        $scope.bookmarks = [];
+                    }
+                    $scope.sessionChecked = true;
+                });
+            } catch (error) {
+                console.error('Session check error:', error);
+                safeApply(() => {
+                    $scope.isLoggedIn = false;
+                    $scope.sessionChecked = true;
+                    $scope.message = '会话检查失败';
+                });
+            }
+        };
+
+        $scope.login = async (event) => {
+            event && event.preventDefault();
+            
+            if (!$scope.user?.email || !$scope.user?.password) {
+                safeApply(() => {
+                    $scope.message = '请输入邮箱和密码';
                 });
                 return;
             }
+        
+            try {
+                const { data, error } = await AuthService.login(
+                    $scope.user.email,
+                    $scope.user.password
+                );
+            
+                if (error) throw error;
+            
+                safeApply(() => {
+                    $scope.isLoggedIn = true;
+                    $scope.message = '';
+                });
 
-            await checkSession();
-        } catch (error) {
-            console.error('初始化错误:', error);
-            $scope.$apply(() => {
-                $scope.message = '系统初始化失败，请刷新页面重试';
-            });
-        } finally {
-            $scope.$apply(() => {
-                $scope.checkingConnection = false;
-            });
-        }
-    };
+                const { data: bookmarks } = await BookmarkService.getBookmarks(data.user.id);
+                safeApply(() => {
+                    $scope.bookmarks = bookmarks || [];
+                });
+            } catch (error) {
+                console.error('登录错误:', error);
+                safeApply(() => {
+                    $scope.message = error.message || '登录失败';
+                });
+            }
+        };
 
-    initialize();
+        $scope.logout = async () => {
+            try {
+                await AuthService.logout();
+                safeApply(() => {
+                    $scope.isLoggedIn = false;
+                    $scope.bookmarks = [];
+                    $scope.message = '';
+                });
+            } catch (error) {
+                console.error('退出错误:', error);
+                safeApply(() => {
+                    $scope.message = '退出失败';
+                });
+            }
+        };
 
-    // 初始化状态
-    $scope.sessionChecked = false;  // 确保已初始化
-    $scope.isLoggedIn = false;
-    $scope.bookmarks = [];
+        initialize();
 
-    // 添加：检查会话状态
-    async function checkSession() {
-      try {
-        const { data: { user }, error } = await AuthService.getUser();
-        if (user && $scope.sessionExpiresAt && Date.now() < $scope.sessionExpiresAt) {
-          $scope.isLoggedIn = true;
-          const { data: bookmarks } = await BookmarkService.getBookmarks(user.id);
-          $scope.bookmarks = bookmarks || [];
-        } else {
-          await AuthService.logout();
-          $scope.$apply(() => {
-              $scope.isLoggedIn = false;
-              $scope.bookmarks = [];
-              $scope.message = ''; // 清空消息
-          });
-        }
-      } catch (error) {
-        console.error('Session check error:', error);
-      } finally {
-        $scope.$apply(() => {
-            $scope.sessionChecked = true;
+        // 定期检查会话
+        const sessionCheckInterval = setInterval(() => {
+            if ($scope.isLoggedIn) {
+                checkSession();
+            }
+        }, 300000);
+
+        $scope.$on('$destroy', () => {
+            clearInterval(sessionCheckInterval);
         });
-      }
     }
-
-    // 页面加载时检查会话
-    checkSession();
-
-    // 添加：退出登录方法
-    $scope.logout = async function() {
-      try {
-        await AuthService.logout();
-        $scope.isLoggedIn = false;
-        $scope.bookmarks = [];
-        localStorage.removeItem('userId');
-        $scope.$apply();
-      } catch (error) {
-        console.error('Logout error:', error);
-      }
-    };
-
-    // 统一登录方法
-    // 修改登录方法，添加会话过期时间
-    // 可以在登录前添加表单验证
-    $scope.login = async function(event) {
-        console.log('登录按钮被点击'); // 调试日志
-        event && event.preventDefault();
-        
-        if (!$scope.user || !$scope.user.email || !$scope.user.password) {
-            console.log('缺少邮箱或密码'); // 调试日志
-            $scope.$apply(() => {
-                $scope.message = '请输入邮箱和密码';
-            });
-            return;
-        }
-    
-        try {
-            console.log('正在发送登录请求', $scope.user.email); // 调试日志
-            const { data, error } = await AuthService.login(
-                $scope.user.email,
-                $scope.user.password
-            );
-        
-            if (error) throw error;
-            console.log('登录成功', data); // 调试日志
-        
-            const expiresAt = Date.now() + 3600000;
-            const { data: bookmarks } = await BookmarkService.getBookmarks(data.user.id);
-        
-            $scope.$apply(() => {
-                $scope.bookmarks = bookmarks || [];
-                $scope.isLoggedIn = true;
-                $scope.sessionExpiresAt = expiresAt;
-                $scope.message = '';
-            });
-        } catch (error) {
-            console.error('登录错误:', error); // 调试日志
-            $scope.$apply(() => {
-                $scope.message = error.message || '登录失败';
-            });
-        }
-    };
-    
-    // 添加会话过期检查
-    // 可以添加心跳检测或定时检查会话状态
-    setInterval(() => {
-      if($scope.isLoggedIn) checkSession();
-    }, 300000); // 每5分钟检查一次
-
-    $scope.showRegister = function() {
-        $scope.isRegister = true;
-        $scope.message = '';
-    };
-    
-    $scope.loginWith = function(provider) {
-        supabaseClient.auth.signInWithOAuth({ provider })
-            .then(({ error }) => {
-                if (error) $scope.message = error.message;
-                $scope.$apply();
-            });
-    };
-  }
 ]);
