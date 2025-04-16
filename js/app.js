@@ -35,7 +35,7 @@ app.controller('AuthController', [
   'BookmarkService',
   ($scope, AuthService, BookmarkService) => {
     // 初始化状态
-    $scope.sessionChecked = false;
+    $scope.sessionChecked = false;  // 确保已初始化
     $scope.isLoggedIn = false;
     $scope.bookmarks = [];
 
