@@ -1,16 +1,12 @@
 var app = angular.module('bookmarkApp', []);
 
-// 替换原有的环境变量获取方式
-// 添加配置验证
-if (!window.__SUPABASE_CONFIG__) {
-  console.error('Supabase配置未加载！请检查config.js是否已加载');
-  throw new Error('Supabase配置缺失');
-}
 
-const { url: SUPABASE_URL, key: SUPABASE_KEY } = window.__SUPABASE_CONFIG__;
+// 修改为从环境变量获取Supabase配置
+const SUPABASE_URL = process.env.SUPABASE_URL || window.__SUPABASE_CONFIG__?.url;
+const SUPABASE_KEY = process.env.SUPABASE_KEY || window.__SUPABASE_CONFIG__?.key;
 
 if (!SUPABASE_URL || !SUPABASE_KEY) {
-  console.error('Supabase配置不完整', window.__SUPABASE_CONFIG__);
+  console.error('Supabase配置不完整', { SUPABASE_URL, SUPABASE_KEY });
   throw new Error('Supabase URL或KEY未配置');
 }
 
@@ -20,7 +16,7 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
         persistSession: false,
         detectSessionInUrl: false,
         flowType: 'pkce',
-        redirectTo: window.location.origin // 确保回调地址正确
+        redirectTo: window.location.origin
     }
 });
 
