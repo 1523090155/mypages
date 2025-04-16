@@ -36,7 +36,7 @@
                             <input type="password" id="password" ng-model="password" placeholder="密码" required>
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="login-btn">登录</button>
+                            <button type="submit" class="login-btn" ng-disabled="!username || !password">登录</button>
                         </div>
                     </div>
                 </form>

@@ -83,18 +83,20 @@ app.controller('AuthController', [
     }, 300000);
 
     $scope.login = async function(event) {
-      if (event) event.preventDefault();
+      event.preventDefault(); // 确保阻止默认表单提交行为
+      
       if (!$scope.username || !$scope.password) {
         return $scope.message = '请输入邮箱和密码';
       }
+      
       try {
         const { data, error } = await AuthService.login($scope.username, $scope.password);
         if (error) throw error;
-
+  
         const expiresAt = Date.now() + 3600000;
         const { data: bookmarks, error: bookmarkError } = await BookmarkService.getBookmarks(data.user.id);
         if (bookmarkError) throw bookmarkError;
-
+  
         $scope.$apply(() => {
           $scope.bookmarks = bookmarks || [];
           $scope.isLoggedIn = true;
