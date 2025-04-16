@@ -24,23 +24,25 @@ jobs:
       with:
         node-version: '18'
 
-    - name: Build project
+    - name: Copy static files
+      run: |
+        mkdir -p public/js
+        mkdir -p public/css
+        cp -r js/* public/js/
+        cp -r css/* public/css/
+        cp index.html public/
+        
+    - name: Generate env config
       env:
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
       run: |
-        # 生成env-config.js到public目录
-        mkdir -p public
         echo "window.SUPABASE_URL = '$SUPABASE_URL';" > public/env-config.js
         echo "window.SUPABASE_KEY = '$SUPABASE_KEY';" >> public/env-config.js
-        
-        # 检查文件是否生成
-        ls -la public/
-        cat public/env-config.js
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./public  # 发布public目录
-        keep_files: true  # 保留生成的文件
+        publish_dir: ./public
+        keep_files: true
