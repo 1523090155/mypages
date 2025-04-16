@@ -44,7 +44,7 @@
                 <div class="message" ng-cloak>{{message}}</div>
             </div>
 
-            <div id="bookmarks" ng-show="isLoggedIn" ng-cloak>
+            <div id="bookmarks" ng-show="isLoggedIn && sessionChecked" ng-cloak>
                 <div class="bookmark-header">
                     <h2>个人书签</h2>
                     <button ng-click="logout()" class="logout-btn">退出登录</button>
