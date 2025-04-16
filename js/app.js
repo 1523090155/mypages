@@ -1,8 +1,18 @@
 var app = angular.module('bookmarkApp', []);
 
 // 替换原有的环境变量获取方式
-const SUPABASE_URL = window.__SUPABASE_CONFIG__.url;
-const SUPABASE_KEY = window.__SUPABASE_CONFIG__.key;
+// 添加配置验证
+if (!window.__SUPABASE_CONFIG__) {
+  console.error('Supabase配置未加载！请检查config.js是否已加载');
+  throw new Error('Supabase配置缺失');
+}
+
+const { url: SUPABASE_URL, key: SUPABASE_KEY } = window.__SUPABASE_CONFIG__;
+
+if (!SUPABASE_URL || !SUPABASE_KEY) {
+  console.error('Supabase配置不完整', window.__SUPABASE_CONFIG__);
+  throw new Error('Supabase URL或KEY未配置');
+}
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
     auth: {
