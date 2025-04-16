@@ -46,6 +46,14 @@ jobs:
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
       run: |
+        if [ -z "${{ secrets.SUPABASE_URL }}" ]; then
+          echo "SUPABASE_URL 未配置或为空"
+          exit 1
+        fi
+        if [ -z "${{ secrets.SUPABASE_KEY }}" ]; then
+          echo "SUPABASE_KEY 未配置或为空"
+          exit 1
+        fi
         if [ -d dist ]; then
           echo "清理 dist 目录中..."
           rm -rf dist
