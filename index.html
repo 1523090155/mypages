@@ -7,13 +7,21 @@
     <!-- 字体与样式 -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
-
-    <!-- 首先加载环境配置 -->
-    <script src="./js/env.js"></script>
     <!-- 引入其他脚本 -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="./js/app.js"></script>
+    <!-- 环境配置检查 -->
+    <script>
+        window.addEventListener('load', function() {
+            const url = document.querySelector('meta[name="supabase-url"]');
+            const key = document.querySelector('meta[name="supabase-key"]');
+            console.log('环境配置检查:', {
+                'supabase-url': url ? '已设置' : '未设置',
+                'supabase-key': key ? '已设置' : '未设置'
+            });
+        });
+    </script>
     <style>
         [ng-cloak] {
             display: none !important;
