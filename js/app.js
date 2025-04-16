@@ -1,10 +1,10 @@
 // 从meta标签读取配置
 try {
-    const supabaseUrl = document.querySelector('meta[name="supabase-url"]')?.content;
-    const supabaseKey = document.querySelector('meta[name="supabase-key"]')?.content;
+    const supabaseUrl = window.SUPABASE_URL;
+    const supabaseKey = window.SUPABASE_KEY;
 
     if (!supabaseUrl || !supabaseKey) {
-        throw new Error('无法读取Supabase配置，请检查环境变量是否正确注入');
+        throw new Error('缺少Supabase配置参数 - 请在HTML中通过window.SUPABASE_URL和window.SUPABASE_KEY设置');
     }
 
     console.log('Supabase配置检查:', {
