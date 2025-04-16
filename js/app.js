@@ -1,5 +1,10 @@
 // 从meta标签读取配置
 try {
+    if (!window.SUPABASE_URL || !window.SUPABASE_KEY) {
+        console.error('Supabase配置错误: SUPABASE_URL或SUPABASE_KEY未定义');
+        throw new Error('缺少Supabase配置参数 - 请在HTML中通过window.SUPABASE_URL和window.SUPABASE_KEY设置');
+    }
+
     const supabaseUrl = window.SUPABASE_URL;
     const supabaseKey = window.SUPABASE_KEY;
 
