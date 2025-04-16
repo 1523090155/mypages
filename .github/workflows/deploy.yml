@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - run: npm init -y  # 先创建package.json
+    - run: npm install
     
     - name: Setup Node.js
       uses: actions/setup-node@v2

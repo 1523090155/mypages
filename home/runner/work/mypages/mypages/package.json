@@ -1,0 +1,12 @@
+{
+  "name": "mypages",
+  "version": "1.0.0",
+  "description": "云服务导航中心",
+  "scripts": {
+    "start": "live-server --port=8080"
+  },
+  "dependencies": {
+    "live-server": "^1.2.2"
+  },
+  "license": "MIT"
+}
