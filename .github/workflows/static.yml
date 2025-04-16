@@ -15,4 +15,4 @@ jobs:
       
     - name: Inject environment variables
       run: |
-        sed -i 's|</head>|<script>window.SUPABASE_URL="${{ secrets.SUPABASE_URL }}";window.SUPABASE_KEY="${{ secrets.SUPABASE_KEY }}";</script></head>|' index.html
+        echo '<script>window.SUPABASE_URL="${{ secrets.SUPABASE_URL }}";window.SUPABASE_KEY="${{ secrets.SUPABASE_KEY }}";</script>' >> index.html
