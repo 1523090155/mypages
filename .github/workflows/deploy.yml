@@ -15,6 +15,7 @@ jobs:
         run: |
           echo "window.SUPABASE_URL = '${{ secrets.SUPABASE_URL }}';" > ./config.js
           echo "window.SUPABASE_KEY = '${{ secrets.SUPABASE_KEY }}';" >> ./config.js
+          chmod 644 ./config.js
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
