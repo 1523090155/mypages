@@ -55,11 +55,7 @@ jobs:
           echo "SUPABASE_KEY 未配置或为空"
           exit 1
         fi
-        if [ ! -f .env ]; then
-          echo ".env 文件不存在"
-          exit 1
-        fi
-        echo ".env 文件已找到"
+       
         if [ -d dist ]; then
           echo "清理 dist 目录中..."
           rm -rf dist
