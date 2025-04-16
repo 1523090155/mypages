@@ -17,8 +17,8 @@ if (!supabaseUrl || !supabaseKey) {
   throw new Error('缺少Supabase配置参数');
 }
 
-// 统一使用 supabase
-const supabase = supabase.createClient(supabaseUrl, supabaseKey, {...});
+// 修正这里的语法错误
+const supabase = supabase.createClient(supabaseUrl, supabaseKey, {
   auth: {
     autoRefreshToken: false,
     persistSession: true,

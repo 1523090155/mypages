@@ -1,24 +1,29 @@
-name: Deploy Static Site
+name: Deploy Static App
 
 on:
   push:
-    branches: [ main ]
-  workflow_dispatch:
+    branches:
+      - main
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
+    
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+      
+    - name: Clean install
+      run: |
+        rm -rf node_modules
+        npm cache clean --force
+        npm install --no-optional --no-shrinkwrap --no-package-lock
 
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '18'
-
-    - name: Install dependencies
-      run: npm install
+        cache: 'false'  # 禁用缓存
 
     - name: Build project
       env:
@@ -26,11 +31,10 @@ jobs:
         SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
       run: |
         npm run build
-        cp CNAME dist/
+        rm -rf node_modules
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./dist
-        keep_files: true
+        publish_dir: ./
