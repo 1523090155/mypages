@@ -1,4 +1,4 @@
-name: Deploy Supabase App
+name: Deploy Static App
 
 on:
   push:
@@ -20,17 +20,15 @@ jobs:
 
     - name: Install dependencies
       run: npm install
-    - name: Install Angular CLI
-      run: npm install -g @angular/cli
 
-    - name: Build and configure environment
+    - name: Build project
       env:
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-      run: npm run build
+      run: echo "Build step skipped for static app"
 
-    - name: Deploy application
-      env:
-        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-      run: npm start
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./ # 将此替换为静态文件所在目录，例如 index.html、CSS 和 JS 文件
