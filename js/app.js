@@ -76,45 +76,36 @@ app.controller('AuthController', [
     // 修改登录方法，添加会话过期时间
     // 可以在登录前添加表单验证
     $scope.login = async function(event) {
-      if (event) event.preventDefault();
-      if (!$scope.username || !$scope.password) {
-        return $scope.message = '请输入邮箱和密码';
+      event.preventDefault(); // 阻止默认表单提交行为
+      
+      if (!$scope.user || !$scope.user.email || !$scope.user.password) {
+          $scope.message = '请输入邮箱和密码';
+          $scope.$apply();
+          return;
       }
+
       try {
-        const { data, error } = await AuthService.login(
-          $scope.username,
-          $scope.password
-        );
-    
-        if (error) throw error;
-    
-        // 不存储用户ID到localStorage
-        // 设置会话过期时间（例如1小时）
-        const expiresAt = Date.now() + 3600000; // 1小时后过期
-        
-        // 调试日志：检查用户 ID
-        console.log('User ID:', data.user.id);
-    
-        const { data: bookmarks, error: bookmarkError } = await BookmarkService.getBookmarks(data.user.id);
-    
-        // 调试日志：检查书签数据
-        console.log('Bookmarks fetched from Supabase:', bookmarks);
-    
-        if (bookmarkError) throw bookmarkError;
-    
-        $scope.$apply(() => {
-          $scope.bookmarks = bookmarks || [];
-          console.log('Bookmarks assigned to $scope:', $scope.bookmarks);
-          $scope.isLoggedIn = true;
-          $scope.isRegister = false;
-          $scope.sessionExpiresAt = expiresAt; // 存储过期时间
-        });
-      } 
-      catch (error) {
-        $scope.$apply(() => {
-          $scope.message = error.message;
-          console.error('Error during login or fetching bookmarks:', error);
-        });
+          const { data, error } = await AuthService.login(
+              $scope.user.email,
+              $scope.user.password
+          );
+      
+          if (error) throw error;
+      
+          const expiresAt = Date.now() + 3600000;
+          const { data: bookmarks } = await BookmarkService.getBookmarks(data.user.id);
+      
+          $scope.$apply(() => {
+              $scope.bookmarks = bookmarks || [];
+              $scope.isLoggedIn = true;
+              $scope.sessionExpiresAt = expiresAt;
+              $scope.message = '';
+          });
+      } catch (error) {
+          $scope.$apply(() => {
+              $scope.message = error.message || '登录失败';
+              console.error('登录错误:', error);
+          });
       }
     };
     
