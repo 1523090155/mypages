@@ -1,5 +1,10 @@
 {
+  "name": "my-pages",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "ng build --prod"
+  },
   "dependencies": {
-    "@supabase/supabase-js": "^2.49.4"
+    "@supabase/supabase-js": "^2.0.0"
   }
 }
