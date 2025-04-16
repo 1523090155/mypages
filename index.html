@@ -32,7 +32,10 @@
 
         <!-- 用户认证区域 -->
         <div class="auth-section" ng-controller="AuthController">
-            <div ng-show="!isLoggedIn && sessionChecked">
+            <div ng-show="checkingConnection" class="loading-message">
+                正在连接服务器...
+            </div>
+            <div ng-show="!isLoggedIn && sessionChecked && !checkingConnection">
                 <form ng-submit="login($event)" action="javascript:void(0)">
                     <div class="form-container">
                         <div class="form-group">                       

@@ -20,6 +20,15 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
     }
 });
 
+const checkConnection = async () => {
+    try {
+        const response = await fetch(SUPABASE_URL, { method: 'HEAD' });
+        return response.ok;
+    } catch (e) {
+        return false;
+    }
+};
+
 // 统一服务定义
 app.factory('AuthService', () => ({
   login: (email, password) => supabaseClient.auth.signInWithPassword({ email, password }),
@@ -40,6 +49,36 @@ app.controller('AuthController', [
   'AuthService',
   'BookmarkService',
   ($scope, AuthService, BookmarkService) => {
+    $scope.checkingConnection = true;
+
+    const initialize = async () => {
+        try {
+            $scope.checkingConnection = true;
+            const isConnected = await checkConnection();
+            
+            if (!isConnected) {
+                $scope.$apply(() => {
+                    $scope.message = '连接服务器失败，请检查网络';
+                    $scope.checkingConnection = false;
+                });
+                return;
+            }
+
+            await checkSession();
+        } catch (error) {
+            console.error('初始化错误:', error);
+            $scope.$apply(() => {
+                $scope.message = '系统初始化失败，请刷新页面重试';
+            });
+        } finally {
+            $scope.$apply(() => {
+                $scope.checkingConnection = false;
+            });
+        }
+    };
+
+    initialize();
+
     // 初始化状态
     $scope.sessionChecked = false;  // 确保已初始化
     $scope.isLoggedIn = false;
