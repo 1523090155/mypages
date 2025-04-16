@@ -20,9 +20,9 @@ jobs:
         cp -r css public/
         cp index.html public/
 
-    - name: Generate environment config inline
+    - name: Inject environment variables
       run: |
-        echo "window.SUPABASE_URL='${{ secrets.SUPABASE_URL }}';window.SUPABASE_KEY='${{ secrets.SUPABASE_KEY }}';" > public/js/env.js
+        sed -i 's|</head>|<meta name="supabase-url" content="${{ secrets.SUPABASE_URL }}"><meta name="supabase-key" content="${{ secrets.SUPABASE_KEY }}"></head>|' public/index.html
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3

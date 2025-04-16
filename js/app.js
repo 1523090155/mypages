@@ -1,29 +1,18 @@
-// 移除import语句
-var app = angular.module('bookmarkApp', []);
-
-// 使用全局Supabase变量
-const supabaseUrl = window.SUPABASE_URL;
-const supabaseKey = window.SUPABASE_KEY;
+// 从meta标签读取配置
+const supabaseUrl = document.querySelector('meta[name="supabase-url"]').content;
+const supabaseKey = document.querySelector('meta[name="supabase-key"]').content;
 
 // 添加详细的配置检查
 if (!supabaseUrl || !supabaseKey) {
-  console.error('Supabase配置错误:');
-  console.error('SUPABASE_URL:', supabaseUrl);
-  console.error('SUPABASE_KEY:', supabaseKey ? '已设置(隐藏)' : '未设置');
-  throw new Error('缺少Supabase配置参数 - 请在HTML中通过window.SUPABASE_URL和window.SUPABASE_KEY设置');
+    console.error('Supabase配置错误:');
+    console.error('SUPABASE_URL:', supabaseUrl);
+    console.error('SUPABASE_KEY:', supabaseKey ? '已设置(隐藏)' : '未设置');
+    throw new Error('缺少Supabase配置参数');
 }
 
-// 检查URL格式
-if (!supabaseUrl.startsWith('http')) {
-  console.warn('Supabase URL格式可能不正确:', supabaseUrl);
-}
+var app = angular.module('bookmarkApp', []);
 
-// 检查KEY长度
-if (supabaseKey.length < 30) {
-  console.warn('Supabase KEY长度异常:', supabaseKey.length);
-}
-
-// 使用全局supabase客户端
+// 使用supabase客户端
 const { createClient } = supabase;
 const supabaseClient = createClient(supabaseUrl, supabaseKey);
 
