@@ -85,7 +85,7 @@ app.controller('AuthController', [
     // 可以在登录前添加表单验证
     $scope.login = async function(event) {
       event.preventDefault(); // 阻止默认表单提交行为
-      
+
       if (!$scope.user || !$scope.user.email || !$scope.user.password) {
           $scope.$apply(() => {
               $scope.message = '请输入邮箱和密码';
