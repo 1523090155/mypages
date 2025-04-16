@@ -84,38 +84,42 @@ app.controller('AuthController', [
     // 修改登录方法，添加会话过期时间
     // 可以在登录前添加表单验证
     $scope.login = async function(event) {
-      event && event.preventDefault(); // 更安全的阻止默认行为
-      
-      if (!$scope.user || !$scope.user.email || !$scope.user.password) {
-          $scope.$apply(() => {
-              $scope.message = '请输入邮箱和密码';
-          });
-          return;
-      }
-
-      try {
-          const { data, error } = await AuthService.login(
-              $scope.user.email,
-              $scope.user.password
-          );
-      
-          if (error) throw error;
-      
-          const expiresAt = Date.now() + 3600000;
-          const { data: bookmarks } = await BookmarkService.getBookmarks(data.user.id);
-      
-          $scope.$apply(() => {
-              $scope.bookmarks = bookmarks || [];
-              $scope.isLoggedIn = true;
-              $scope.sessionExpiresAt = expiresAt;
-              $scope.message = '';
-              window.location.hash = ''; // 清除URL hash
-          });
-      } catch (error) {
-          $scope.$apply(() => {
-              $scope.message = error.message || '登录失败';
-          });
-      }
+        console.log('登录按钮被点击'); // 调试日志
+        event && event.preventDefault();
+        
+        if (!$scope.user || !$scope.user.email || !$scope.user.password) {
+            console.log('缺少邮箱或密码'); // 调试日志
+            $scope.$apply(() => {
+                $scope.message = '请输入邮箱和密码';
+            });
+            return;
+        }
+    
+        try {
+            console.log('正在发送登录请求', $scope.user.email); // 调试日志
+            const { data, error } = await AuthService.login(
+                $scope.user.email,
+                $scope.user.password
+            );
+        
+            if (error) throw error;
+            console.log('登录成功', data); // 调试日志
+        
+            const expiresAt = Date.now() + 3600000;
+            const { data: bookmarks } = await BookmarkService.getBookmarks(data.user.id);
+        
+            $scope.$apply(() => {
+                $scope.bookmarks = bookmarks || [];
+                $scope.isLoggedIn = true;
+                $scope.sessionExpiresAt = expiresAt;
+                $scope.message = '';
+            });
+        } catch (error) {
+            console.error('登录错误:', error); // 调试日志
+            $scope.$apply(() => {
+                $scope.message = error.message || '登录失败';
+            });
+        }
     };
     
     // 添加会话过期检查
