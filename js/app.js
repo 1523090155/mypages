@@ -1,5 +1,14 @@
 // 从meta标签读取配置
 try {
+    console.log('调试信息: SUPABASE_URL:', window.SUPABASE_URL);
+    console.log('调试信息: SUPABASE_KEY:', window.SUPABASE_KEY);
+
+    try {
+        new URL(window.SUPABASE_URL);
+    } catch (e) {
+        throw new Error(`Supabase配置错误: 无效的SUPABASE_URL - ${window.SUPABASE_URL}`);
+    }
+
     const supabaseUrl = window.SUPABASE_URL;
     const supabaseKey = window.SUPABASE_KEY;
 
