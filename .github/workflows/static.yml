@@ -29,6 +29,9 @@ jobs:
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
       run: |
+        echo "SUPABASE_URL: $SUPABASE_URL"
+        echo "SUPABASE_KEY: $SUPABASE_KEY"
+        echo "Build step skipped for static app"
         npm run build
         rm -rf node_modules
 
