@@ -1,23 +1,29 @@
-import { createClient } from '@supabase/supabase-js';
 
-// Initialize AngularJS module before anything else
-// 移除 import 语句
+// 移除import语句
 var app = angular.module('bookmarkApp', []);
 
 // 使用全局Supabase变量
 const supabaseUrl = window.SUPABASE_URL;
 const supabaseKey = window.SUPABASE_KEY;
 
-if (!window.SUPABASE_URL || !window.SUPABASE_KEY) {
-  console.error('Missing Supabase config');
-  // 显示用户友好的错误信息
-}
-
+// 添加详细的配置检查
 if (!supabaseUrl || !supabaseKey) {
-  throw new Error('缺少Supabase配置参数');
+  console.error('Supabase配置错误:');
+  console.error('SUPABASE_URL:', supabaseUrl);
+  console.error('SUPABASE_KEY:', supabaseKey ? '已设置(隐藏)' : '未设置');
+  throw new Error('缺少Supabase配置参数 - 请在HTML中通过window.SUPABASE_URL和window.SUPABASE_KEY设置');
 }
 
-// 修正这里的语法错误
+// 检查URL格式
+if (!supabaseUrl.startsWith('http')) {
+  console.warn('Supabase URL格式可能不正确:', supabaseUrl);
+}
+
+// 检查KEY长度
+if (supabaseKey.length < 30) {
+  console.warn('Supabase KEY长度异常:', supabaseKey.length);
+}
+
 const supabase = supabase.createClient(supabaseUrl, supabaseKey, {
   auth: {
     autoRefreshToken: false,
@@ -83,17 +89,15 @@ app.controller('AuthController', [
     }, 300000);
 
     $scope.login = async function(event) {
-      if (event) {
-        event.preventDefault();
-        event.stopPropagation();
+      event.preventDefault(); // 阻止表单默认提交行为
+      event.stopPropagation(); // 阻止事件冒泡
+      
+      if (!$scope.username || !$scope.password) {
+        return $scope.message = '请输入邮箱和密码';
       }
       
       try {
-        const { data, error } = await AuthService.login(
-          $scope.username,
-          $scope.password
-        );
-        
+        const { data, error } = await AuthService.login($scope.username, $scope.password);
         if (error) throw error;
         
         const expiresAt = Date.now() + 3600000;
