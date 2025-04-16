@@ -2,11 +2,9 @@
   "name": "mypages",
   "version": "1.0.0",
   "description": "云服务导航中心",
-  "engines": {
-    "node": ">=18.0.0"
-  },
   "scripts": {
-    "start": "live-server --port=8080"
+    "start": "live-server --port=8080",
+    "build": "echo '构建完成' && exit 0"  // 简单构建命令
   },
   "dependencies": {
     "angular": "^1.8.2",

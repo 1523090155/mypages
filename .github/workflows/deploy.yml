@@ -13,16 +13,10 @@ jobs:
       with:
         node-version: '18'
     
-    # 先生成 package-lock.json
-    - run: npm install
-    
-    # 然后使用 ci 进行干净安装
-    - run: npm ci  # Use ci instead of install for cleaner builds
+    - run: npm ci
     
     - name: Build
       env:
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-      run: |
-        npm install
-        npm run build
+      run: npm run build
