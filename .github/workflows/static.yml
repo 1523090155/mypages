@@ -13,36 +13,23 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
       
-    - name: Clean install
+    - name: Create public directory
+      run: mkdir -p public
+      
+    - name: Copy files
       run: |
-        rm -rf node_modules
-        npm cache clean --force
-        npm install --no-optional --no-shrinkwrap --no-package-lock
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-
-    - name: Copy static files
-      run: |
-        mkdir -p public/js
-        mkdir -p public/css
-        cp -r js/* public/js/
-        cp -r css/* public/css/
+        cp -r js public/
+        cp -r css public/
         cp index.html public/
         
-    - name: Generate env config
-      env:
-        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+    - name: Replace environment variables
       run: |
-        echo "window.SUPABASE_URL = '$SUPABASE_URL';" > public/env-config.js
-        echo "window.SUPABASE_KEY = '$SUPABASE_KEY';" >> public/env-config.js
+        sed -i "s|window.SUPABASE_URL = '.*'|window.SUPABASE_URL = '${{ secrets.SUPABASE_URL }}'|g" public/index.html
+        sed -i "s|window.SUPABASE_KEY = '.*'|window.SUPABASE_KEY = '${{ secrets.SUPABASE_KEY }}'|g" public/index.html
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./public
-        keep_files: true
+        keep_files: false
