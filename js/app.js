@@ -1,22 +1,13 @@
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_KEY = process.env.SUPABASE_KEY;
+
 var app = angular.module('bookmarkApp', []);
-
-
-// 从配置文件获取 Supabase 配置
-const SUPABASE_URL = window.__SUPABASE_CONFIG__?.url;
-const SUPABASE_KEY = window.__SUPABASE_CONFIG__?.key;
-
-if (!SUPABASE_URL || !SUPABASE_KEY) {
-  console.error('Supabase配置不完整', { SUPABASE_URL, SUPABASE_KEY });
-  throw new Error('Supabase URL或KEY未配置');
-}
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
     auth: {
         autoRefreshToken: false,
         persistSession: false,
-        detectSessionInUrl: false,
-        flowType: 'pkce',
-        redirectTo: window.location.origin
+        detectSessionInUrl: false
     }
 });
 

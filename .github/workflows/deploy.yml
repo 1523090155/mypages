@@ -1,43 +1,18 @@
-name: Deploy Application
+name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
     branches: [ main ]
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     
-    env:
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-      SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-    
     steps:
       - uses: actions/checkout@v3
       
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-          
-      - name: Install Dependencies
-        run: npm install
-        
-      - name: Create env file
-        run: |
-          echo "SUPABASE_URL=${SUPABASE_URL}" >> .env
-          echo "SUPABASE_KEY=${SUPABASE_KEY}" >> .env
-          
-      - name: Build
-        run: npm run build
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-
-      - name: Deploy
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          publish_dir: .
