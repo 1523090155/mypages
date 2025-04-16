@@ -1,18 +1,22 @@
+import { createClient } from '@supabase/supabase-js'; // 正确导入 Supabase 客户端库
+
 var app = angular.module('bookmarkApp', []);
 
-// Supabase 配置
-const SUPABASE_URL = 'https://vfwrwhoqkifxlogoavod.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZmd3J3aG9xa2lmeGxvZ29hdm9kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM2ODc1NTYsImV4cCI6MjA1OTI2MzU1Nn0.HX_WGCy93SwmrIZjFOxf5Ma86jE3pNITIhZu-r6mbDI'; // 保持您的原始密钥
-// 修改变量名避免冲突
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+// 获取环境变量
+const supabaseUrl = process.env.SUPABASE_URL; 
+const supabaseKey = process.env.SUPABASE_KEY;
+
+// 初始化 Supabase 客户端
+const supabase = createClient(supabaseUrl, supabaseKey, {
   auth: {
-    autoRefreshToken: false,  // 禁用自动刷新token
+    autoRefreshToken: false, // 禁用自动刷新 token
     persistSession: false,   // 不持久化会话
-    detectSessionInUrl: false,
-    flowType: 'pkce',
-    redirectTo: null
+    detectSessionInUrl: false, // 不检测 URL 中的会话信息
+    flowType: 'pkce',         // 授权流程类型
+    redirectTo: null          // 不使用重定向
   }
 });
+
 
 // 统一服务定义
 app.factory('AuthService', () => ({
