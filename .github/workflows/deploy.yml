@@ -14,66 +14,47 @@ jobs:
       with:
         node-version: '18'
     
-    # 添加 JSON 验证步骤
+    # 验证 package.json 是否存在并格式正确
     - name: 验证 package.json
       run: |
+        if [ ! -f package.json ]; then
+          echo "package.json 文件不存在"
+          exit 1
+        fi
         if ! jq empty package.json; then
           echo "package.json 格式错误"
           exit 1
         fi
     
-    # 自动生成package-lock.json（如果不存在）
-    - name: 初始化npm环境
+    # 自动生成 package-lock.json（如果不存在）
+    - name: 初始化 npm 环境
       run: |
         if [ ! -f package-lock.json ]; then
           npm install
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           git add package-lock.json
-          git commit -m "自动生成package-lock.json" || echo "没有新的package-lock.json需要提交"
+          git commit -m "自动生成 package-lock.json" || echo "没有新的 package-lock.json 需要提交"
         fi
     
-    # 确保 node_modules 文件夹不存在
-    - name: 检查 node_modules
-      run: |
-        if [ -d node_modules ]; then
-          echo "node_modules 文件夹已存在，可能导致 npm ci 冲突"
-          exit 1
-        fi
-
-    - name: Remove existing node_modules
-      run: |
-        if [ -d node_modules ]; then
-          rm -rf node_modules
-        fi
-
+    # 安装依赖
     - run: npm ci
     
-    # 清理构建目录
-    - name: 清理构建目录
+    # 清理构建目录并确保构建成功
+    - name: 构建项目
+      env:
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
       run: |
         if [ -d dist ]; then
+          echo "清理 dist 目录中..."
           rm -rf dist
         fi
-
-    # 确保构建成功
-    - name: 验证构建
-      run: |
         if ! npm run build; then
           echo "构建失败"
           exit 1
         fi
-
-    # 验证构建输出
-    - name: 验证构建输出
-      run: |
         if [ ! -d dist ]; then
           echo "构建输出目录 dist 不存在"
           exit 1
         fi
-
-    - name: Build
-      env:
-        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-      run: npm run build
