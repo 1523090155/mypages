@@ -1,21 +1,38 @@
-const SUPABASE_URL = window.SUPABASE_URL;
-const SUPABASE_KEY = window.SUPABASE_KEY;
+const getConfig = () => {
+    if (!window.SUPABASE_URL || !window.SUPABASE_KEY) {
+        throw new Error('未找到 Supabase 配置');
+    }
+    return {
+        url: window.SUPABASE_URL,
+        key: window.SUPABASE_KEY
+    };
+};
 
 var app = angular.module('bookmarkApp', []);
 
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-    auth: {
-        autoRefreshToken: false,
-        persistSession: false,
-        detectSessionInUrl: false
+const supabaseClient = (() => {
+    try {
+        const config = getConfig();
+        return supabase.createClient(config.url, config.key, {
+            auth: {
+                autoRefreshToken: false,
+                persistSession: false,
+                detectSessionInUrl: false
+            }
+        });
+    } catch (error) {
+        console.error('Supabase 客户端初始化失败:', error);
+        return null;
     }
-});
+})();
 
 const checkConnection = async () => {
     try {
-        const response = await fetch(SUPABASE_URL, { method: 'HEAD' });
+        const config = getConfig();
+        const response = await fetch(config.url, { method: 'HEAD' });
         return response.ok;
     } catch (e) {
+        console.error('连接检查失败:', e);
         return false;
     }
 };
