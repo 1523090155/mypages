@@ -33,8 +33,24 @@ jobs:
           git commit -m "自动生成package-lock.json" || echo "没有新的package-lock.json需要提交"
         fi
     
+    # 确保 node_modules 文件夹不存在
+    - name: 检查 node_modules
+      run: |
+        if [ -d node_modules ]; then
+          echo "node_modules 文件夹已存在，可能导致 npm ci 冲突"
+          exit 1
+        fi
+
     - run: npm ci
     
+    # 确保构建成功
+    - name: 验证构建
+      run: |
+        if ! npm run build; then
+          echo "构建失败"
+          exit 1
+        fi
+
     - name: Build
       env:
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
