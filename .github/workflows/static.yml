@@ -21,6 +21,9 @@ jobs:
     - name: Install dependencies
       run: npm install
 
+    - name: Install Angular CLI (如果需要)
+      run: npm install -g @angular/cli
+
     - name: Build and configure environment
       env:
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
