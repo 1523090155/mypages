@@ -46,6 +46,8 @@ jobs:
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
       run: |
+        echo "SUPABASE_URL: ${{ secrets.SUPABASE_URL }}"
+        echo "SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}"
         if [ -z "${{ secrets.SUPABASE_URL }}" ]; then
           echo "SUPABASE_URL 未配置或为空"
           exit 1
