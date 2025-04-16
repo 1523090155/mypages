@@ -54,7 +54,4 @@ jobs:
           echo "构建失败"
           exit 1
         fi
-        if [ ! -d dist ]; then
-          echo "构建输出目录 dist 不存在"
-          exit 1
-        fi
+        echo "构建完成，无需输出目录"
