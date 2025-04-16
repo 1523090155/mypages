@@ -49,11 +49,26 @@ jobs:
 
     - run: npm ci
     
+    # 清理构建目录
+    - name: 清理构建目录
+      run: |
+        if [ -d dist ]; then
+          rm -rf dist
+        fi
+
     # 确保构建成功
     - name: 验证构建
       run: |
         if ! npm run build; then
           echo "构建失败"
+          exit 1
+        fi
+
+    # 验证构建输出
+    - name: 验证构建输出
+      run: |
+        if [ ! -d dist ]; then
+          echo "构建输出目录 dist 不存在"
           exit 1
         fi
 
