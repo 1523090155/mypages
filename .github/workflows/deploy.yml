@@ -9,18 +9,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
+    - uses: actions/setup-node@v3
       with:
-        node-version: '18'  # Updated to LTS version
-        
-    - name: Install dependencies
-      env:
-        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-      run: |
-        npm ci  # Use ci instead of install for cleaner builds
+        node-version: '18'
+    
+    # 先生成 package-lock.json
+    - run: npm install
+    
+    # 然后使用 ci 进行干净安装
+    - run: npm ci  # Use ci instead of install for cleaner builds
     
     - name: Build
       env:
