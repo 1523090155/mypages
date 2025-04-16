@@ -46,8 +46,25 @@ jobs:
           exit 1
         fi
     
-    # 安装依赖
-    - run: npm ci
+    # 验证 package.json
+    - name: 验证 package.json
+      run: |
+        if [ ! -f package.json ]; then
+          echo "package.json 文件不存在"
+          exit 1
+        fi
+        if ! jq empty package.json; then
+          echo "package.json 格式错误"
+          exit 1
+        fi
+    
+    # 先运行npm install生成package-lock.json
+    - name: 生成package-lock.json
+      run: npm install
+    
+    # 然后运行npm ci
+    - name: 安装依赖
+      run: npm ci
     
     # 构建项目
     - name: 构建项目
