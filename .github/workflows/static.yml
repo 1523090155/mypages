@@ -29,27 +29,17 @@ jobs:
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
       run: |
-        # 生成env-config.js
-        mkdir -p js
-        echo "window.SUPABASE_URL = '$SUPABASE_URL';" > js/env-config.js
-        echo "window.SUPABASE_KEY = '$SUPABASE_KEY';" >> js/env-config.js
+        # 生成env-config.js到根目录
+        echo "window.SUPABASE_URL = '$SUPABASE_URL';" > env-config.js
+        echo "window.SUPABASE_KEY = '$SUPABASE_KEY';" >> env-config.js
         
         # 检查文件是否生成
-        echo "生成文件内容:"
-        cat js/env-config.js
-        echo -e "\n文件列表:"
-        ls -la js/
-        
-        echo "Build step skipped for static app"
-
-    - name: Verify files
-      run: |
-        echo "验证生成的文件:"
-        [ -f "js/env-config.js" ] && echo "env-config.js存在" || echo "env-config.js不存在"
-        [ -s "js/env-config.js" ] && echo "env-config.js非空" || echo "env-config.js为空"
+        ls -la
+        cat env-config.js
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./dist  # 修改为dist目录
+        publish_dir: ./  # 发布根目录
+        keep_files: true  # 保留生成的文件
