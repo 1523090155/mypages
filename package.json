@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "echo 'No build step required for static pages'",
-    "build": "echo 'Building static assets...' && cp -r public/* dist/ && cp CNAME dist/",
+    "build": "echo 'Building static assets...' && mkdir -p dist && cp -r *.html css/ js/ CNAME dist/",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
