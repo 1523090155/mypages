@@ -1,10 +1,5 @@
 // 从meta标签读取配置
 try {
-    if (!window.SUPABASE_URL || !window.SUPABASE_KEY) {
-        console.error('Supabase配置错误: SUPABASE_URL或SUPABASE_KEY未定义');
-        throw new Error('缺少Supabase配置参数 - 请在HTML中通过window.SUPABASE_URL和window.SUPABASE_KEY设置');
-    }
-
     const supabaseUrl = window.SUPABASE_URL;
     const supabaseKey = window.SUPABASE_KEY;
 
@@ -12,11 +7,18 @@ try {
         throw new Error('缺少Supabase配置参数 - 请在HTML中通过window.SUPABASE_URL和window.SUPABASE_KEY设置');
     }
 
+    // 验证URL格式
+    try {
+        new URL(supabaseUrl);
+    } catch (e) {
+        throw new Error(`Supabase配置错误: 无效的SUPABASE_URL - ${supabaseUrl}`);
+    }
+
     console.log('Supabase配置检查:', {
-        url: supabaseUrl ? '已设置 ✓' : '未设置 ✗',
-        key: supabaseKey ? '已设置 ✓' : '未设置 ✗',
-        urlLength: supabaseUrl?.length,
-        keyLength: supabaseKey?.length
+        url: '已设置 ✓',
+        key: '已设置 ✓',
+        urlLength: supabaseUrl.length,
+        keyLength: supabaseKey.length
     });
 
     // 初始化supabase客户端
