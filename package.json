@@ -1,11 +1,6 @@
 {
-  "name": "my-pages",
-  "version": "1.0.0",
+  "type": "module",
   "scripts": {
-    "start": "echo 'No build step required for static pages'",
-    "build": "echo 'Building static assets...' && mkdir -p dist && cp -r *.html css/ js/ CNAME dist/"
-  },
-  "dependencies": {
-    "gh-pages": "^4.0.0"
+    "build": "echo 'Building...' && mkdir -p dist && cp -r *.html css/ js/ CNAME dist/"
   }
 }

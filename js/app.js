@@ -1,18 +1,24 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Initialize AngularJS module before anything else
-// 移除import语句
+// 移除 import 语句
 var app = angular.module('bookmarkApp', []);
 
 // 使用全局Supabase变量
 const supabaseUrl = window.SUPABASE_URL;
 const supabaseKey = window.SUPABASE_KEY;
 
+if (!window.SUPABASE_URL || !window.SUPABASE_KEY) {
+  console.error('Missing Supabase config');
+  // 显示用户友好的错误信息
+}
+
 if (!supabaseUrl || !supabaseKey) {
   throw new Error('缺少Supabase配置参数');
 }
 
-const supabase = supabase.createClient(supabaseUrl, supabaseKey, {
+// 统一使用 supabase
+const supabase = supabase.createClient(supabaseUrl, supabaseKey, {...});
   auth: {
     autoRefreshToken: false,
     persistSession: true,
