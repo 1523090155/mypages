@@ -1,50 +1,43 @@
-name: Deploy to GitHub Pages
+name: Deploy Application
 
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:
-
-env:
-  SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-  SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pages: write
-      id-token: write
+    
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
     
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        
-      - name: Clean workspace
-        run: |
-          git clean -ffdx
-          rm -rf node_modules/
-          
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: '16'
           
-      - name: Install dependencies
+      - name: Install Dependencies
         run: npm install
         
+      - name: Create env file
+        run: |
+          echo "SUPABASE_URL=${SUPABASE_URL}" >> .env
+          echo "SUPABASE_KEY=${SUPABASE_KEY}" >> .env
+          
       - name: Build
         run: npm run build
-        
-      - name: Setup Pages
-        uses: actions/configure-pages@v3
-        
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1  # 已验证可用的稳定版本
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          path: ./
-          
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v1  # 配套的部署版本
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
