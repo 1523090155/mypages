@@ -13,23 +13,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
       
-    - name: Create public directory
-      run: mkdir -p public
-      
-    - name: Copy files
+    - name: Setup public directory
       run: |
+        mkdir -p public
         cp -r js public/
         cp -r css public/
         cp index.html public/
-        
-    - name: Replace environment variables
+
+    - name: Generate environment config inline
       run: |
-        sed -i "s|window.SUPABASE_URL = '.*'|window.SUPABASE_URL = '${{ secrets.SUPABASE_URL }}'|g" public/index.html
-        sed -i "s|window.SUPABASE_KEY = '.*'|window.SUPABASE_KEY = '${{ secrets.SUPABASE_KEY }}'|g" public/index.html
+        echo "window.SUPABASE_URL='${{ secrets.SUPABASE_URL }}';window.SUPABASE_KEY='${{ secrets.SUPABASE_KEY }}';" > public/js/env.js
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./public
-        keep_files: false
