@@ -10,8 +10,9 @@
 
     <!-- 引入 AngularJS 和 Supabase -->
     <!-- 修改后的脚本加载部分 -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <!-- 调整加载顺序 -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="js/app.js?v=1.0" defer></script>
     <style>
         [ng-cloak] {

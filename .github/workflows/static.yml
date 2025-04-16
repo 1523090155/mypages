@@ -1,14 +1,13 @@
-name: Deploy Static App
+name: Deploy Static Site
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -25,10 +24,13 @@ jobs:
       env:
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-      run: echo "Build step skipped for static app"
+      run: |
+        npm run build
+        cp CNAME dist/
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./ # 将此替换为静态文件所在目录，例如 index.html、CSS 和 JS 文件
+        publish_dir: ./dist
+        keep_files: true
