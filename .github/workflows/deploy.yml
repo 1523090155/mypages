@@ -43,9 +43,7 @@ jobs:
     
     # 清理构建目录并确保构建成功
     - name: 构建项目
-      env:
-        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+
       run: |
         echo "SUPABASE_URL: ${{ secrets.SUPABASE_URL }}"
         echo "SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}"
