@@ -4,7 +4,7 @@
   "description": "云服务导航中心",
   "scripts": {
     "start": "live-server --port=8080",
-    "build": "echo '构建完成' && exit 0"  // 简单构建命令
+    "build": "echo '构建完成' && exit 0"
   },
   "dependencies": {
     "angular": "^1.8.2",

@@ -14,6 +14,14 @@ jobs:
       with:
         node-version: '18'
     
+    # 添加 JSON 验证步骤
+    - name: 验证 package.json
+      run: |
+        if ! jq empty package.json; then
+          echo "package.json 格式错误"
+          exit 1
+        fi
+    
     # 自动生成package-lock.json（如果不存在）
     - name: 初始化npm环境
       run: |
