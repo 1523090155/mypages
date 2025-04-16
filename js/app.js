@@ -1,9 +1,10 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Initialize AngularJS module before anything else
+// 移除import语句
 var app = angular.module('bookmarkApp', []);
 
-// Then proceed with Supabase imports
+// 使用全局Supabase变量
 const supabaseUrl = window.SUPABASE_URL;
 const supabaseKey = window.SUPABASE_KEY;
 
@@ -11,7 +12,7 @@ if (!supabaseUrl || !supabaseKey) {
   throw new Error('缺少Supabase配置参数');
 }
 
-const supabase = createClient(supabaseUrl, supabaseKey, {
+const supabase = supabase.createClient(supabaseUrl, supabaseKey, {
   auth: {
     autoRefreshToken: false,
     persistSession: true,
