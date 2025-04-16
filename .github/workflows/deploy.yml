@@ -13,9 +13,10 @@ jobs:
       
       - name: Create config file
         run: |
-          echo "window.SUPABASE_URL = '${{ secrets.SUPABASE_URL }}';" > ./config.js
-          echo "window.SUPABASE_KEY = '${{ secrets.SUPABASE_KEY }}';" >> ./config.js
-          chmod 644 ./config.js
+          cat > config.js << 'EOL'
+          window.SUPABASE_URL = "${{ secrets.SUPABASE_URL }}";
+          window.SUPABASE_KEY = "${{ secrets.SUPABASE_KEY }}";
+          EOL
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
