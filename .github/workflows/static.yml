@@ -13,19 +13,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
       
-    - name: Setup public directory
-      run: |
-        mkdir -p public
-        cp -r js public/
-        cp -r css public/
-        cp index.html public/
-
     - name: Inject environment variables
       run: |
-        sed -i 's|</head>|<script>window.SUPABASE_URL="${{ secrets.SUPABASE_URL }}";window.SUPABASE_KEY="${{ secrets.SUPABASE_KEY }}";</script></head>|' public/index.html
+        sed -i 's|</head>|<script>window.SUPABASE_URL="${{ secrets.SUPABASE_URL }}";window.SUPABASE_KEY="${{ secrets.SUPABASE_KEY }}";</script></head>|' index.html
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./public
+        publish_dir: ./
