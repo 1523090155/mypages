@@ -41,6 +41,12 @@ jobs:
           exit 1
         fi
 
+    - name: Remove existing node_modules
+      run: |
+        if [ -d node_modules ]; then
+          rm -rf node_modules
+        fi
+
     - run: npm ci
     
     # 确保构建成功
