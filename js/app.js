@@ -43,16 +43,24 @@ app.controller('AuthController', [
     async function checkSession() {
       try {
         const { data: { user }, error } = await AuthService.getUser();
-        if (user) {
+        if (user && $scope.sessionExpiresAt && Date.now() < $scope.sessionExpiresAt) {
           $scope.isLoggedIn = true;
           const { data: bookmarks } = await BookmarkService.getBookmarks(user.id);
           $scope.bookmarks = bookmarks || [];
+        } else {
+          await AuthService.logout();
+          $scope.$apply(() => {
+              $scope.isLoggedIn = false;
+              $scope.bookmarks = [];
+              $scope.message = ''; // 清空消息
+          });
         }
       } catch (error) {
         console.error('Session check error:', error);
       } finally {
-        $scope.sessionChecked = true;
-        $scope.$apply();
+        $scope.$apply(() => {
+            $scope.sessionChecked = true;
+        });
       }
     }
 
@@ -79,8 +87,9 @@ app.controller('AuthController', [
       event.preventDefault(); // 阻止默认表单提交行为
       
       if (!$scope.user || !$scope.user.email || !$scope.user.password) {
-          $scope.message = '请输入邮箱和密码';
-          $scope.$apply();
+          $scope.$apply(() => {
+              $scope.message = '请输入邮箱和密码';
+          });
           return;
       }
 
@@ -99,7 +108,7 @@ app.controller('AuthController', [
               $scope.bookmarks = bookmarks || [];
               $scope.isLoggedIn = true;
               $scope.sessionExpiresAt = expiresAt;
-              $scope.message = '';
+              $scope.message = ''; // 登录成功后清空消息
           });
       } catch (error) {
           $scope.$apply(() => {
@@ -114,25 +123,6 @@ app.controller('AuthController', [
     setInterval(() => {
       if($scope.isLoggedIn) checkSession();
     }, 300000); // 每5分钟检查一次
-    async function checkSession() {
-      try {
-        const { data: { user }, error } = await AuthService.getUser();
-        if (user && $scope.sessionExpiresAt && Date.now() < $scope.sessionExpiresAt) {
-          $scope.isLoggedIn = true;
-          const { data: bookmarks } = await BookmarkService.getBookmarks(user.id);
-          $scope.bookmarks = bookmarks || [];
-        } else {
-          await AuthService.logout();
-          $scope.isLoggedIn = false;
-          $scope.bookmarks = [];
-        }
-      } catch (error) {
-        console.error('Session check error:', error);
-      } finally {
-        $scope.sessionChecked = true;
-        $scope.$apply();
-      }
-    }
 
     $scope.showRegister = function() {
         $scope.isRegister = true;
