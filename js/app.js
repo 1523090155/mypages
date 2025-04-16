@@ -1,4 +1,3 @@
-
 // 移除import语句
 var app = angular.module('bookmarkApp', []);
 
@@ -24,24 +23,18 @@ if (supabaseKey.length < 30) {
   console.warn('Supabase KEY长度异常:', supabaseKey.length);
 }
 
-const supabase = supabase.createClient(supabaseUrl, supabaseKey, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: true,
-    detectSessionInUrl: false,
-    flowType: 'pkce',
-    redirectTo: null
-  }
-});
+// 使用全局supabase客户端
+const { createClient } = supabase;
+const supabaseClient = createClient(supabaseUrl, supabaseKey);
 
 app.factory('AuthService', () => ({
-  login: (email, password) => supabase.auth.signInWithPassword({ email, password }),
-  logout: () => supabase.auth.signOut(),
-  getUser: () => supabase.auth.getUser()
+  login: (email, password) => supabaseClient.auth.signInWithPassword({ email, password }),
+  logout: () => supabaseClient.auth.signOut(),
+  getUser: () => supabaseClient.auth.getUser()
 }));
 
 app.factory('BookmarkService', () => ({
-  getBookmarks: (userId) => supabase.from('bookmarks')
+  getBookmarks: (userId) => supabaseClient.from('bookmarks')
     .select('*')
     .eq('user_id', userId)
     .order('created_at', { ascending: false })
@@ -135,7 +128,7 @@ app.controller('AuthController', [
     };
 
     $scope.loginWith = function(provider) {
-      supabase.auth.signInWithOAuth({ provider })
+      supabaseClient.auth.signInWithOAuth({ provider })
         .then(({ error }) => {
           if (error) $scope.message = error.message;
           $scope.$apply();
