@@ -9,7 +9,10 @@
     <link rel="stylesheet" href="css/style.css">
 
     <!-- 引入 AngularJS 和 Supabase -->
-    <script src="/config.js"></script>
+    <script>
+        window.SUPABASE_URL = '__SUPABASE_URL__';
+        window.SUPABASE_KEY = '__SUPABASE_KEY__';
+    </script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- 修改脚本加载顺序 -->
