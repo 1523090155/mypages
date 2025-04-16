@@ -43,10 +43,13 @@ jobs:
     
     # 清理构建目录并确保构建成功
     - name: 构建项目
-
       run: |
-        echo "SUPABASE_URL: ${{ secrets.SUPABASE_URL }}"
-        echo "SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}"
+        # 创建包含环境变量的配置文件
+        echo "window.__SUPABASE_CONFIG__ = {
+          url: '${{ secrets.SUPABASE_URL }}',
+          key: '${{ secrets.SUPABASE_KEY }}'
+        };" > js/config.js
+        
         if [ -z "${{ secrets.SUPABASE_URL }}" ]; then
           echo "SUPABASE_URL 未配置或为空"
           exit 1

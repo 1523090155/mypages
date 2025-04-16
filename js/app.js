@@ -1,8 +1,8 @@
 var app = angular.module('bookmarkApp', []);
 
-// 从 GitHub Actions 的环境变量中获取配置
-const SUPABASE_URL = process.env.SUPABASE_URL || '${{ secrets.SUPABASE_URL }}';
-const SUPABASE_KEY = process.env.SUPABASE_KEY || '${{ secrets.SUPABASE_KEY }}';
+// 替换原有的环境变量获取方式
+const SUPABASE_URL = window.__SUPABASE_CONFIG__.url;
+const SUPABASE_KEY = window.__SUPABASE_CONFIG__.key;
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
     auth: {
