@@ -1,33 +1,15 @@
-// 从meta标签读取配置
+// 从构建环境变量读取配置
 try {
-    console.log('调试信息: SUPABASE_URL:', window.SUPABASE_URL);
-    console.log('调试信息: SUPABASE_KEY:', window.SUPABASE_KEY);
-
-    try {
-        new URL(window.SUPABASE_URL);
-    } catch (e) {
-        throw new Error(`Supabase配置错误: 无效的SUPABASE_URL - ${window.SUPABASE_URL}`);
-    }
-
-    const supabaseUrl = window.SUPABASE_URL;
-    const supabaseKey = window.SUPABASE_KEY;
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
 
     if (!supabaseUrl || !supabaseKey) {
-        throw new Error('缺少Supabase配置参数 - 请在HTML中通过window.SUPABASE_URL和window.SUPABASE_KEY设置');
-    }
-
-    // 验证URL格式
-    try {
-        new URL(supabaseUrl);
-    } catch (e) {
-        throw new Error(`Supabase配置错误: 无效的SUPABASE_URL - ${supabaseUrl}`);
+        throw new Error('缺少Supabase配置参数 - 请在构建时设置VITE_SUPABASE_URL和VITE_SUPABASE_KEY');
     }
 
     console.log('Supabase配置检查:', {
-        url: '已设置 ✓',
-        key: '已设置 ✓',
-        urlLength: supabaseUrl.length,
-        keyLength: supabaseKey.length
+        url: supabaseUrl ? '已设置 ✓' : '未设置 ×',
+        key: supabaseKey ? '已设置 ✓' : '未设置 ×'
     });
 
     // 初始化supabase客户端
@@ -151,6 +133,6 @@ try {
       }
     ]);
 } catch (error) {
-    console.error('Supabase配置错误:', error.message);
+    console.error('Supabase初始化错误:', error.message);
     throw error;
 }
