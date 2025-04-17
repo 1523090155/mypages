@@ -19,6 +19,12 @@ jobs:
       - name: 清理 npm 缓存
         run: npm cache clean --force
         
+      - name: 清理旧部署
+        run: |
+          rm -rf node_modules
+          rm -rf dist
+          rm -f package-lock.json
+        
       - name: 生成 package-lock.json
         run: npm install --package-lock-only
         
