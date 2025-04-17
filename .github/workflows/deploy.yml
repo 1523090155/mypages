@@ -10,21 +10,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: 彻底清理
+      - name: 设置 Node.js 环境
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'false'  # 完全禁用缓存
+          
+      - name: 彻底清理环境
         run: |
+          npm cache clean --force
           rm -rf node_modules
           rm -rf dist
           rm -f package-lock.json
           rm -rf .vite
-          
-      - name: 设置 Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
+          rm -rf .npm
           
       - name: 安装依赖
-        run: npm ci
+        run: npm ci --no-cache  # 禁用 npm 缓存
         env:
           VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           VITE_SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
@@ -35,12 +37,7 @@ jobs:
           VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           VITE_SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           
-      - name: 验证构建
-        run: |
-          ls -R dist
-          grep -r "vue" dist/
-          
-      - name: 部署
+      - name: 部署到 GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
