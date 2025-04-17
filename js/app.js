@@ -29,6 +29,10 @@ app.factory('BookmarkService', () => ({
     .select('*')
     .eq('user_id', userId)
     .order('created_at', { ascending: false })
+    .then(({ data, error }) => {
+      if (error) throw error;
+      return { data, error };
+    })
 }));
 
 // 唯一控制器定义
@@ -42,81 +46,51 @@ app.controller('AuthController', [
     $scope.isLoggedIn = false;
     $scope.bookmarks = [];
 
-    // 添加：检查会话状态
+    // 修改后的检查会话方法
     async function checkSession() {
       try {
         const { data: { user }, error } = await AuthService.getUser();
         if (user) {
           $scope.isLoggedIn = true;
-          const { data: bookmarks } = await BookmarkService.getBookmarks(user.id);
+          const { data: bookmarks, error: bookmarkError } = await BookmarkService.getBookmarks(user.id);
+          if (bookmarkError) throw bookmarkError;
           $scope.bookmarks = bookmarks || [];
+          console.log('获取到的书签数据:', bookmarks); // 添加调试日志
         }
       } catch (error) {
-        console.error('Session check error:', error);
+        console.error('检查会话错误:', error);
       } finally {
         $scope.sessionChecked = true;
         $scope.$apply();
       }
     }
 
-    // 页面加载时检查会话
-    checkSession();
-
-    // 添加：退出登录方法
-    $scope.logout = async function() {
-      try {
-        await AuthService.logout();
-        $scope.isLoggedIn = false;
-        $scope.bookmarks = [];
-        localStorage.removeItem('userId');
-        $scope.$apply();
-      } catch (error) {
-        console.error('Logout error:', error);
-      }
-    };
-
-    // 统一登录方法
-    // 修改登录方法，添加会话过期时间
-    // 可以在登录前添加表单验证
+    // 修改后的登录方法
     $scope.login = async function(event) {
       if (event) event.preventDefault();
       if (!$scope.username || !$scope.password) {
         return $scope.message = '请输入邮箱和密码';
       }
       try {
-        const { data, error } = await AuthService.login(
-          $scope.username,
-          $scope.password
-        );
-    
+        const { data, error } = await AuthService.login($scope.username, $scope.password);
         if (error) throw error;
-    
-        // 不存储用户ID到localStorage
-        // 设置会话过期时间（例如1小时）
-        const expiresAt = Date.now() + 3600000; // 1小时后过期
         
-        // 调试日志：检查用户 ID
-        console.log('User ID:', data.user.id);
-    
+        console.log('登录成功，用户ID:', data.user.id); // 调试日志
+        
         const { data: bookmarks, error: bookmarkError } = await BookmarkService.getBookmarks(data.user.id);
-    
-        // 调试日志：检查书签数据
-        console.log('Bookmarks fetched from Supabase:', bookmarks);
-    
         if (bookmarkError) throw bookmarkError;
-    
+        
+        console.log('获取到的书签数据:', bookmarks); // 调试日志
+        
         $scope.$apply(() => {
           $scope.bookmarks = bookmarks || [];
-          console.log('Bookmarks assigned to $scope:', $scope.bookmarks);
           $scope.isLoggedIn = true;
-          $scope.isRegister = false;
-          $scope.sessionExpiresAt = expiresAt; // 存储过期时间
+          $scope.message = '';
         });
-      } 
-      catch (error) {
+      } catch (error) {
         $scope.$apply(() => {
           $scope.message = error.message;
-          console.error('Error during login or fetching bookmarks:', error);
+          console.error('登录或获取书签错误:', error);
         });
       }
     };
