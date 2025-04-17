@@ -1,4 +1,4 @@
-name: Deploy Vue App
+name: 部署 Vue 应用到 GitHub Pages
 
 on:
   push:
@@ -8,32 +8,28 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - name: 设置 Node.js 环境
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
+          cache: 'npm'
           
-      - name: Clean npm cache
-        run: npm cache clean --force
-          
-      - name: Install dependencies
-        run: npm install
+      - name: 安装依赖
+        run: npm ci
         env:
           VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           VITE_SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           
-      - name: Build
-        run: |
-          npm run build || (echo "Build failed, checking project structure..." && ls -R)
+      - name: 构建生产版本
+        run: npm run build
         env:
           VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           VITE_SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           
-      - name: Deploy to GitHub Pages
-        if: success()
-        uses: peaceiris/actions-gh-pages@v3
+      - name: 部署到 GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
