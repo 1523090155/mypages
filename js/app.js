@@ -45,27 +45,30 @@ app.controller('AuthController', [
     $scope.sessionChecked = false;
     $scope.isLoggedIn = false;
     $scope.bookmarks = [];
+    $scope.sessionExpiresAt = null; // 添加会话过期时间
 
-    // 修改后的检查会话方法
+    // 合并后的检查会话方法
     async function checkSession() {
       try {
         const { data: { user }, error } = await AuthService.getUser();
-        if (user) {
+        if (user && $scope.sessionExpiresAt && Date.now() < $scope.sessionExpiresAt) {
           $scope.isLoggedIn = true;
-          const { data: bookmarks, error: bookmarkError } = await BookmarkService.getBookmarks(user.id);
-          if (bookmarkError) throw bookmarkError;
+          const { data: bookmarks } = await BookmarkService.getBookmarks(user.id);
           $scope.bookmarks = bookmarks || [];
-          console.log('获取到的书签数据:', bookmarks); // 添加调试日志
+        } else {
+          await AuthService.logout();
+          $scope.isLoggedIn = false;
+          $scope.bookmarks = [];
         }
       } catch (error) {
-        console.error('检查会话错误:', error);
+        console.error('Session check error:', error);
       } finally {
         $scope.sessionChecked = true;
         $scope.$apply();
       }
     }
 
-    // 修改后的登录方法
+    // 登录方法保持不变
     $scope.login = async function(event) {
       if (event) event.preventDefault();
       if (!$scope.username || !$scope.password) {
@@ -97,40 +100,9 @@ app.controller('AuthController', [
     
     // 添加会话过期检查
     // 可以添加心跳检测或定时检查会话状态
+    // 初始化操作放在最后
     setInterval(() => {
       if($scope.isLoggedIn) checkSession();
     }, 300000); // 每5分钟检查一次
-    async function checkSession() {
-      try {
-        const { data: { user }, error } = await AuthService.getUser();
-        if (user && $scope.sessionExpiresAt && Date.now() < $scope.sessionExpiresAt) {
-          $scope.isLoggedIn = true;
-          const { data: bookmarks } = await BookmarkService.getBookmarks(user.id);
-          $scope.bookmarks = bookmarks || [];
-        } else {
-          await AuthService.logout();
-          $scope.isLoggedIn = false;
-          $scope.bookmarks = [];
-        }
-      } catch (error) {
-        console.error('Session check error:', error);
-      } finally {
-        $scope.sessionChecked = true;
-        $scope.$apply();
-      }
-    }
-
-    $scope.showRegister = function() {
-        $scope.isRegister = true;
-        $scope.message = '';
-    };
-    
-    $scope.loginWith = function(provider) {
-        supabaseClient.auth.signInWithOAuth({ provider })
-            .then(({ error }) => {
-                if (error) $scope.message = error.message;
-                $scope.$apply();
-            });
-    };
   }
 ]);
