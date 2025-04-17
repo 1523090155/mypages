@@ -25,12 +25,14 @@ jobs:
           VITE_SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           
       - name: Build
-        run: npm run build
+        run: |
+          npm run build || (echo "Build failed, checking project structure..." && ls -R)
         env:
           VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           VITE_SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           
       - name: Deploy to GitHub Pages
+        if: success()
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
