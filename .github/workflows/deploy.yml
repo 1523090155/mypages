@@ -29,13 +29,17 @@ jobs:
         run: npm install --package-lock-only
         
       - name: 安装依赖
-        run: npm ci
+        run: |
+          npm ci
+          npm cache verify
         env:
           VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           VITE_SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           
       - name: 构建生产版本
-        run: npm run build
+        run: |
+          npm run build
+          ls -R dist # Verify built files
         env:
           VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           VITE_SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}

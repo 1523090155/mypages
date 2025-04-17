@@ -5,11 +5,8 @@ export default function useSupabase() {
   const supabaseKey = import.meta.env.VITE_SUPABASE_KEY
   
   if (!supabaseUrl || !supabaseKey) {
-    console.error('Supabase配置参数:', {
-      VITE_SUPABASE_URL: supabaseUrl,
-      VITE_SUPABASE_KEY: supabaseKey ? '*****' : '未设置'
-    })
-    throw new Error('缺少Supabase配置参数 - 请检查.env文件或部署配置')
+    console.warn('Supabase 配置缺失，请检查 .env 文件或部署配置')
+    return null
   }
 
   const supabase = createClient(supabaseUrl, supabaseKey)

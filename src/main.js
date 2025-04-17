@@ -6,8 +6,8 @@ import App from './App.vue'
 const githubToken = import.meta.env.VITE_GITHUB_TOKEN
 const otherSecret = import.meta.env.VITE_OTHER_SECRET
 
-console.log('GitHub Token:', githubToken ? '*****' : '未设置') // 安全起见不打印真实token
-console.log('Other Secret:', otherSecret ? '*****' : '未设置')
+console.log('GitHub Token:', githubToken ? '已设置' : '未设置')
+console.log('Other Secret:', otherSecret ? '已设置' : '未设置')
 
 const app = createApp(App)
 const pinia = createPinia()

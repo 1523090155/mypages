@@ -1,15 +1,7 @@
 <template>
-  <div id="app">
-    <AuthView />
-    <HomeView />
-  </div>
+  <router-view />
 </template>
 
 <script setup>
-import AuthView from '@/views/Auth.vue'
-import HomeView from '@/views/Home.vue'
+import './assets/css/style.css'
 </script>
-
-<style>
-@import './assets/css/style.css';
-</style>
