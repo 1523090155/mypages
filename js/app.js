@@ -1,19 +1,14 @@
-// 从构建环境变量读取配置
+import { createClient } from '@supabase/supabase-js';
+   
 try {
+    // 添加模块导入
+ 
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
     const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
 
-    if (!supabaseUrl || !supabaseKey) {
-        throw new Error('缺少Supabase配置参数 - 请在构建时设置VITE_SUPABASE_URL和VITE_SUPABASE_KEY');
-    }
-
-    console.log('Supabase配置检查:', {
-        url: supabaseUrl ? '已设置 ✓' : '未设置 ×',
-        key: supabaseKey ? '已设置 ✓' : '未设置 ×'
-    });
-
-    // 初始化supabase客户端
-    const { createClient } = supabase;
+    // 删除旧的全局变量引用
+    // const { createClient } = supabase;
+    
     const supabaseClient = createClient(supabaseUrl, supabaseKey);
 
     var app = angular.module('bookmarkApp', []);
