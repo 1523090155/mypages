@@ -14,17 +14,27 @@ jobs:
       uses: actions/checkout@v3
       
     - name: Debug print secrets
+      env:
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
       run: |
-        echo "SUPABASE_URL: ${{ secrets.SUPABASE_URL }}"
-        echo "SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}"
+        echo "SUPABASE_URL: $SUPABASE_URL"
+        echo "SUPABASE_KEY: $SUPABASE_KEY"
       
     - name: Inject environment variables
       env:
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      shell: bash
       run: |
-        script_content="<script>window.SUPABASE_URL=\"$SUPABASE_URL\";window.SUPABASE_KEY=\"$SUPABASE_KEY\";</script>"
-        echo "$script_content" >> index.html
+        # 安装 jq 工具用于转义特殊字符
+        sudo apt-get update && sudo apt-get install -y jq
+        # 对 SUPABASE_URL 和 SUPABASE_KEY 进行转义
+        escaped_url=$(echo "$SUPABASE_URL" | jq -R -s -c @json)
+        escaped_key=$(echo "$SUPABASE_KEY" | jq -R -s -c @json)
+        script_content="<script>window.SUPABASE_URL=$escaped_url;window.SUPABASE_KEY=$escaped_key;</script>"
+        # 使用 sed 命令将脚本插入到 </body> 标签之前
+        sed -i "s:</body>:$script_content</body>:" index.html
     
     - name: Check index.html content
       run: |
