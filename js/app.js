@@ -41,6 +41,7 @@ app.controller('AuthController', [
     $scope.sessionChecked = false;
     $scope.isLoggedIn = false;
     $scope.bookmarks = [];
+    $scope.username = localStorage.getItem('rememberedEmail') || ''; // 读取存储的邮箱
 
     // 添加：检查会话状态
     async function checkSession() {
@@ -69,6 +70,7 @@ app.controller('AuthController', [
         $scope.isLoggedIn = false;
         $scope.bookmarks = [];
         localStorage.removeItem('userId');
+        // 退出登录时不删除邮箱
         $scope.$apply();
       } catch (error) {
         console.error('Logout error:', error);
@@ -104,6 +106,8 @@ app.controller('AuthController', [
         console.log('Bookmarks fetched from Supabase:', bookmarks);
     
         if (bookmarkError) throw bookmarkError;
+
+        localStorage.setItem('rememberedEmail', $scope.username); // 存储邮箱
     
         $scope.$apply(() => {
           $scope.bookmarks = bookmarks || [];
