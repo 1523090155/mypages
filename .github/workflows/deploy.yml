@@ -16,6 +16,12 @@ jobs:
           node-version: 20
           cache: 'npm'
           
+      - name: 清理 npm 缓存
+        run: npm cache clean --force
+        
+      - name: 生成 package-lock.json
+        run: npm install --package-lock-only
+        
       - name: 安装依赖
         run: npm ci
         env:
