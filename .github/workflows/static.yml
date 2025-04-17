@@ -34,7 +34,8 @@ jobs:
         escaped_key=$(echo "$SUPABASE_KEY" | jq -R -s -c @json)
         script_content="<script>window.SUPABASE_URL=$escaped_url;window.SUPABASE_KEY=$escaped_key;</script>"
         # 使用 sed 命令将脚本插入到 </body> 标签之前
-        sed -i "s:</body>:$script_content</body>:" index.html
+        sed -i.bak "s:</body>:$script_content</body>:" index.html
+        rm index.html.bak
     
     - name: Check index.html content
       run: |
