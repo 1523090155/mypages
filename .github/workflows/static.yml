@@ -27,12 +27,8 @@ jobs:
         SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
       shell: bash
       run: |
-        # 直接创建脚本内容
-        script_content="<script>window.SUPABASE_URL=\"$SUPABASE_URL\";window.SUPABASE_KEY=\"$SUPABASE_KEY\";</script>"
-        # 使用 sed 命令将脚本插入到 </body> 标签之前
-        echo "$script_content" >> temp.html
-        cat index.html >> temp.html
-        mv temp.html index.html
+        # 直接在index.html文件末尾添加脚本
+        echo '<script>window.SUPABASE_URL="$SUPABASE_URL";window.SUPABASE_KEY="$SUPABASE_KEY";</script>' >> index.html
     
     - name: Check index.html content
       run: |
