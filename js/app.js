@@ -2,20 +2,20 @@ var app = angular.module('bookmarkApp', []);
 
 // 更新为 Worker 代理配置
 const WORKER_URL = 'https://base.111600.xyz';
-const supabaseClient = supabase.createClient(WORKER_URL, 'dummy-key', { // 添加一个虚拟key
+const supabaseClient = supabase.createClient(WORKER_URL, 'dummy-key', {
   auth: {
     autoRefreshToken: false,
     persistSession: false,
     detectSessionInUrl: false,
     flowType: 'pkce',
-    redirectTo: 'https://base.111600.xyz'
+    redirectTo: 'https://my.111600.xyz'  // 确保与前端域名一致
   },
   global: {
     headers: {
       'X-Custom-Origin': window.location.hostname
     }
   }
-});
+})
 
 // 统一服务定义
 app.factory('AuthService', () => ({
