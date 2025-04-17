@@ -1,16 +1,19 @@
 var app = angular.module('bookmarkApp', []);
 
-// Supabase 配置
-const SUPABASE_URL = 'https://vfwrwhoqkifxlogoavod.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZmd3J3aG9xa2lmeGxvZ29hdm9kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM2ODc1NTYsImV4cCI6MjA1OTI2MzU1Nn0.HX_WGCy93SwmrIZjFOxf5Ma86jE3pNITIhZu-r6mbDI'; // 保持您的原始密钥
-// 修改变量名避免冲突
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+// 更新为 Worker 代理配置
+const WORKER_URL = 'https://base.111600.xyz';
+const supabaseClient = supabase.createClient(WORKER_URL, '', {
   auth: {
-    autoRefreshToken: false,  // 禁用自动刷新token
-    persistSession: false,   // 不持久化会话
+    autoRefreshToken: false,
+    persistSession: false,
     detectSessionInUrl: false,
     flowType: 'pkce',
-    redirectTo: null
+    redirectTo: 'https://base.111600.xyz'
+  },
+  global: {
+    headers: {
+      'X-Custom-Origin': window.location.hostname
+    }
   }
 });
 
