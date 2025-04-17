@@ -13,6 +13,15 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
       
+    - name: Debug print secrets
+      run: |
+        echo "SUPABASE_URL: ${{ secrets.SUPABASE_URL }}"
+        echo "SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}"
+      
     - name: Inject environment variables
       run: |
         echo '<script>window.SUPABASE_URL="${{ secrets.SUPABASE_URL }}";window.SUPABASE_KEY="${{ secrets.SUPABASE_KEY }}";</script>' >> index.html
+    
+    - name: Check index.html content
+      run: |
+        cat index.html
