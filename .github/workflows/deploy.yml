@@ -10,41 +10,37 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: 设置 Node.js 环境
+      - name: 彻底清理
+        run: |
+          rm -rf node_modules
+          rm -rf dist
+          rm -f package-lock.json
+          rm -rf .vite
+          
+      - name: 设置 Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
           
-      - name: 清理 npm 缓存
-        run: npm cache clean --force
-        
-      - name: 清理旧部署
-        run: |
-          rm -rf node_modules
-          rm -rf dist
-          rm -f package-lock.json
-        
-      - name: 生成 package-lock.json
-        run: npm install --package-lock-only
-        
       - name: 安装依赖
-        run: |
-          npm ci
-          npm cache verify
+        run: npm ci
         env:
           VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           VITE_SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           
       - name: 构建生产版本
-        run: |
-          npm run build
-          ls -R dist # Verify built files
+        run: npm run build
         env:
           VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           VITE_SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           
-      - name: 部署到 GitHub Pages
+      - name: 验证构建
+        run: |
+          ls -R dist
+          grep -r "vue" dist/
+          
+      - name: 部署
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
