@@ -17,19 +17,21 @@ jobs:
       env:
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      shell: pwsh
       run: |
-        echo "SUPABASE_URL: $SUPABASE_URL"
-        echo "SUPABASE_KEY: $SUPABASE_KEY"
+# 移除调试打印
+        # Write-Output "SUPABASE_URL: $env:SUPABASE_URL"
+        # Write-Output "SUPABASE_KEY: $env:SUPABASE_KEY"
       
     - name: Inject environment variables
       env:
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-      shell: bash
+      shell: pwsh
       run: |
-        # 直接在index.html文件末尾添加脚本
-        echo '<script>window.SUPABASE_URL="$SUPABASE_URL";window.SUPABASE_KEY="$SUPABASE_KEY";</script>' >> index.html
+        $script = '<script>window.SUPABASE_URL=\
     
     - name: Check index.html content
+      shell: pwsh
       run: |
-        cat index.html
+        Get-Content -Path index.html
