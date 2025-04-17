@@ -1,22 +1,25 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import path from 'path' // 添加path模块导入
+import path from 'path'
 
 export default defineConfig({
-  base: process.env.NODE_ENV === 'production' ? '/mypages/' : '/', // 匹配仓库名称
+  base: process.env.NODE_ENV === 'production' ? '/mypages/' : '/',
   plugins: [vue()],
   build: {
     outDir: 'dist',
     rollupOptions: {
-      input: {
-        main: path.resolve(__dirname, 'index.html'), // 添加HTML入口
-        app: './src/main.js' // 保留JS入口
+      input: path.resolve(__dirname, 'index.html'),
+      output: {
+        format: 'es', // 确保输出ES模块
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js'
       }
     }
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src') // 确保别名配置正确
+      '@': path.resolve(__dirname, './src'),
+      'vue': 'vue/dist/vue.esm-bundler.js' // 添加Vue别名解析
     }
   }
 })
