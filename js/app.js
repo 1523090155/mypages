@@ -2,7 +2,7 @@ var app = angular.module('bookmarkApp', []);
 
 // 更新为 Worker 代理配置
 const WORKER_URL = 'https://base.111600.xyz';
-const supabaseClient = supabase.createClient(WORKER_URL, '', {
+const supabaseClient = supabase.createClient(WORKER_URL, 'dummy-key', { // 添加一个虚拟key
   auth: {
     autoRefreshToken: false,
     persistSession: false,
