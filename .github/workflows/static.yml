@@ -19,8 +19,12 @@ jobs:
         echo "SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}"
       
     - name: Inject environment variables
+      env:
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
       run: |
-        echo '<script>window.SUPABASE_URL="${{ secrets.SUPABASE_URL }}";window.SUPABASE_KEY="${{ secrets.SUPABASE_KEY }}";</script>' >> index.html
+        script_content="<script>window.SUPABASE_URL=\"$SUPABASE_URL\";window.SUPABASE_KEY=\"$SUPABASE_KEY\";</script>"
+        echo "$script_content" >> index.html
     
     - name: Check index.html content
       run: |
