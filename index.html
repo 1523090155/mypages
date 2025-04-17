@@ -21,6 +21,17 @@
             display: none !important;
         }
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const outputDiv = document.createElement('div');
+            outputDiv.innerHTML = `
+                <p>SUPABASE_URL: ${window.SUPABASE_URL}</p>
+                <p>SUPABASE_KEY: ${window.SUPABASE_KEY}</p>
+            `;
+            document.body.appendChild(outputDiv);
+        });
+    </script>
+
 </head>
 <body>
     <h1>云服务导航 </h1>    
