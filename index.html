@@ -11,7 +11,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script>
-
+        window.SUPABASE_URL = '${{ env.SUPABASE_URL }}';
+        window.SUPABASE_KEY = '${{ env.SUPABASE_KEY }}';
     </script>
     <script src="./js/app.js"></script>
 
@@ -20,16 +21,6 @@
             display: none !important;
         }
     </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const outputDiv = document.createElement('div');
-            outputDiv.innerHTML = `
-                <p>SUPABASE_URL: ${window.SUPABASE_URL}</p>
-                <p>SUPABASE_KEY: ${window.SUPABASE_KEY}</p>
-            `;
-            document.body.appendChild(outputDiv);
-        });
-    </script>
 
 </head>
 <body>

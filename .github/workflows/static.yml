@@ -12,26 +12,7 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-      
-    - name: Debug print secrets
-      env:
-        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-      shell: pwsh
+    - name: Set up environment variables
       run: |
-# 移除调试打印
-        # Write-Output "SUPABASE_URL: $env:SUPABASE_URL"
-        # Write-Output "SUPABASE_KEY: $env:SUPABASE_KEY"
-      
-    - name: Inject environment variables
-      env:
-        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-      shell: pwsh
-      run: |
-        $script = '<script>window.SUPABASE_URL=\
-    
-    - name: Check index.html content
-      shell: pwsh
-      run: |
-        Get-Content -Path index.html
+        echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}" >> $GITHUB_ENV
+        echo "SUPABASE_KEY=${{ secrets.SUPABASE_KEY }}" >> $GITHUB_ENV
