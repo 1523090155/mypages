@@ -9,13 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
-      - name: 设置 Node.js 环境
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'false'  # 完全禁用缓存
-          
       - name: 彻底清理环境
         run: |
           npm cache clean --force
@@ -24,7 +17,16 @@ jobs:
           rm -f package-lock.json
           rm -rf .vite
           rm -rf .npm
+                
+
+
+
+      - name: 设置 Node.js 环境
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
           
+
       - name: 安装依赖
         run: npm ci --no-cache  # 禁用 npm 缓存
         env:
