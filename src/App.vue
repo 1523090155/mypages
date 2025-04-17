@@ -11,5 +11,6 @@ import HomeView from '@/views/Home.vue'
 </script>
 
 <style>
-@import '@/assets/css/style.css';
+
+@import '/src/assets/css/style.css';
 </style>
